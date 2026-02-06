@@ -462,7 +462,7 @@ Memory First, Read-Edit-Verify, stable anchors, and template validation are cons
 
 ## Summary: All Findings by Severity
 
-> **Fix Status**: All P0 and P1 findings FIXED on 2026-02-06. See `FIX-PLAN.md` for execution details.
+> **Fix Status**: ALL 11 findings FIXED on 2026-02-06. P0+P1 via `FIX-PLAN.md`. P2 in follow-up commit.
 
 ### CRITICAL (3) — ALL FIXED
 
@@ -489,12 +489,19 @@ Memory First, Read-Edit-Verify, stable anchors, and template validation are cons
 7. **CC100x Bible is thin** — 114 lines vs 605 lines, missing Glossary, Task Types, Non-Optional Behaviors, etc.
    **FIXED**: Expanded `docs/cc100x-bible.md` from 114 to 380 lines. Added 8 sections: Glossary (CC100x Terms), Skills vs Agents (with Agent Teams differences), Orchestration Invariants (10 rules), Agent Chain Protocols (all 4 workflows with diagrams), Task Types and Prefixes, Non-Optional Behaviors (7 hard rules), Skill Loading Hierarchy (frontmatter table + SKILL_HINTS table for all 9 agents), Task State Transitions. Fixed Architecture Components table paths (agents/*.md, workflow skill paths).
 
-### MINOR (4) — OPEN (P2, not in fix scope)
+### MINOR (4) — ALL FIXED
 
 8. **github-research lost Context7 MCP** — Reduced research capability (may be intentional)
+   **FIXED**: Restored Context7 MCP tools (`mcp__context7__resolve-library-id`, `mcp__context7__query-docs`) to `plugins/cc100x/skills/github-research/SKILL.md`. Added to allowed-tools, overview, availability check fallback chain, new Tier 1.5 section, and updated tier progression diagram. Skill now has full 4-tier fallback: Octocode+BrightData → Context7 → WebSearch/WebFetch → Ask User.
+
 9. **Orchestration Logic Analysis not ported** — Engineering insights doc doesn't exist
+   **FIXED**: Created `docs/cc100x-orchestration-logic-analysis.md` (828 lines, expanded from CC10x's 699). All sections preserved: English Tricks, Gate Enforcement, Iron Laws (15), Agent-Specific Gates, Context Retrieval Pattern, Hydration Pattern, 3-Task Rule, Goal-Backward Lens, Verification Flow, Memory Flow, Research Flow, Handoff Patterns. Updated for 9 agents, 16 skills, Agent Teams architecture (delegate mode, peer messaging, team coordination).
+
 10. **Verification skill not in SKILL_HINTS table** — Documentation inconsistency (functional: verification is in every agent's frontmatter, so it loads without SKILL_HINTS)
+    **FIXED**: Added clarifying note in cc100x-lead SKILL.md explaining that `router-contract`, `verification`, and `session-memory` load via frontmatter (unconditional) and are intentionally NOT in the SKILL_HINTS table.
+
 11. **Investigator lost TDD-aware test recommendation capability** — Now READ-ONLY, no TDD skill (architectural decision: investigator gathers evidence, builder implements fix with TDD)
+    **FIXED**: Added step 11 to investigator process: "Recommend regression test — Describe a failing test the builder should write FIRST (TDD: RED before GREEN)." Updated Recommended Fix output section to reference TDD approach. Investigator stays READ-ONLY but now recommends TDD-structured tests for the builder to implement.
 
 ---
 
@@ -511,7 +518,8 @@ Memory First, Read-Edit-Verify, stable anchors, and template validation are cons
 6. ~~**Add explicit `github-research` references**~~ — DONE (planner + investigator prompts updated)
 7. ~~**Expand CC100x Bible**~~ — DONE (380 lines, 8 new sections)
 
-### P2 — Nice to Have (Minor) — OPEN
-8. **Create CC100x Orchestration Logic Analysis doc** — Port engineering insights from CC10x version
-9. **Add `verification` to SKILL_HINTS** — For documentation completeness (functional: already in frontmatter)
-10. **Evaluate Context7 MCP restoration** — If tool is available in CC100x environment
+### P2 — Nice to Have (Minor) — ALL DONE
+8. ~~**Restore Context7 MCP to github-research**~~ — DONE (4-tier fallback restored)
+9. ~~**Create CC100x Orchestration Logic Analysis doc**~~ — DONE (828 lines)
+10. ~~**Add verification/session-memory/router-contract note to SKILL_HINTS**~~ — DONE (clarifying note)
+11. ~~**Add TDD awareness to investigator**~~ — DONE (step 11 + output section updated)

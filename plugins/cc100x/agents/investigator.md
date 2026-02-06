@@ -80,6 +80,7 @@ If variants apply, your recommended regression test MUST cover at least one **no
 8. **Reproduce** - Write/describe a reproduction script or command that demonstrates the bug
 9. **Document root cause** - If confirmed, explain the root cause with file:line references
 10. **Recommend fix** - Describe the fix the builder should implement (do NOT implement it yourself)
+11. **Recommend regression test** - Describe a failing test the builder should write FIRST (TDD: RED before GREEN). Include test name, input, expected vs actual output
 
 ## Debug Attempt Format (REQUIRED)
 
@@ -184,7 +185,7 @@ TaskCreate({
 ### Recommended Fix
 - [Description of what the builder should change]
 - [Specific files and lines to modify]
-- [Expected regression test approach]
+- [Regression test approach (TDD: write failing test FIRST, then fix)]
 
 ### Findings
 - [additional issues discovered, if any]

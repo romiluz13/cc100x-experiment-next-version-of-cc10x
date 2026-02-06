@@ -1,14 +1,14 @@
 ---
 name: github-research
 description: "Internal skill. Use cc100x-lead for all development tasks."
-allowed-tools: WebFetch, WebSearch, AskUserQuestion, mcp__octocode__githubSearchCode, mcp__octocode__githubSearchRepositories, mcp__octocode__githubViewRepoStructure, mcp__octocode__githubGetFileContent, mcp__octocode__githubSearchPullRequests, mcp__octocode__packageSearch, mcp__brightdata__search_engine, mcp__brightdata__scrape_as_markdown, Read, Write, Edit, Bash
+allowed-tools: WebFetch, WebSearch, AskUserQuestion, mcp__octocode__githubSearchCode, mcp__octocode__githubSearchRepositories, mcp__octocode__githubViewRepoStructure, mcp__octocode__githubGetFileContent, mcp__octocode__githubSearchPullRequests, mcp__octocode__packageSearch, mcp__brightdata__search_engine, mcp__brightdata__scrape_as_markdown, mcp__context7__resolve-library-id, mcp__context7__query-docs, Read, Write, Edit, Bash
 ---
 
 # External Code Research
 
 ## Overview
 
-Research external patterns, documentation, and best practices from GitHub and library docs when AI knowledge is insufficient. Use Octocode MCP for GitHub research, with WebFetch as fallback.
+Research external patterns, documentation, and best practices from GitHub and library docs when AI knowledge is insufficient. Use Octocode MCP for GitHub research, Context7 MCP for library documentation, with WebFetch as final fallback.
 
 **Core principle:** Research BEFORE building, not during. External research enhances planning, not execution.
 
@@ -86,7 +86,8 @@ AskUserQuestion({
 mcp__octocode__packageSearch(name="express", ecosystem="npm")
 ```
 
-**If Octocode unavailable → Fall back to WebFetch**
+**If Octocode unavailable → Fall back to Context7 MCP**
+**If Context7 unavailable → Fall back to WebFetch**
 
 ## Research Process
 
@@ -144,9 +145,26 @@ mcp__brightdata__search_engine(query="{library} tutorial best practices 2024", e
 
 **Merge Strategy:** Use Octocode for code patterns, Bright Data for context/warnings.
 
+### Tier 1.5: Context7 Library Docs (INTERMEDIATE FALLBACK)
+
+**If Tier 1 partially fails (Octocode unavailable but need library docs):**
+
+```
+# Context7 MCP - library documentation
+mcp__context7__resolve-library-id(libraryName="{library}")
+mcp__context7__query-docs(libraryId="{resolved-id}", query="{specific question}")
+```
+
+**When to use:**
+- Octocode MCP unavailable but need library-specific documentation
+- Need official API reference (not community examples)
+- Technology is well-known but need precise API details
+
+**If Context7 unavailable → Fall to Tier 2**
+
 ### Tier 2: Native Claude Code (FALLBACK)
 
-**If Tier 1 fails (MCP unavailable):**
+**If Tier 1 AND Tier 1.5 fail (MCP unavailable):**
 
 ```
 # Native Claude Code tools - always available
@@ -156,8 +174,9 @@ WebFetch(url="https://docs.{library}.com/getting-started", prompt="Extract key s
 
 **When to use:**
 - Octocode MCP unavailable
+- Context7 MCP unavailable
 - Bright Data MCP unavailable
-- Both Tier 1 sources return empty results
+- All Tier 1/1.5 sources return empty results
 
 ### Tier 3: Ask User for Context (FINAL FALLBACK)
 
@@ -188,7 +207,11 @@ START
   ├─→ Tier 1: Parallel (Octocode + Bright Data)
   │     ├─ Both succeed → Merge results, DONE
   │     ├─ One succeeds → Use that result, DONE
-  │     └─ Both fail → Fall to Tier 2
+  │     └─ Both fail → Fall to Tier 1.5
+  │
+  ├─→ Tier 1.5: Context7 (Library Docs)
+  │     ├─ Success → Use result, DONE
+  │     └─ Fail → Fall to Tier 2
   │
   ├─→ Tier 2: Native (WebSearch + WebFetch)
   │     ├─ Success → Use result, DONE

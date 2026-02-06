@@ -584,6 +584,8 @@ skills: cc100x:session-memory, cc100x:verification
 
 **Workflow-based skills are ALWAYS passed for the matching workflow.** They are not conditional — every BUILD gets TDD+code-gen, every REVIEW gets code-review-patterns, etc. This mirrors CC10x's guaranteed skill loading via agent frontmatter.
 
+**Note:** `cc100x:router-contract`, `cc100x:verification`, and `cc100x:session-memory` are NOT in this table because they load via agent frontmatter (unconditional). Every agent gets router-contract + verification; WRITE agents (builder, planner) additionally get session-memory. These do NOT need SKILL_HINTS.
+
 **Also check CLAUDE.md Complementary Skills table and include matching skills in SKILL_HINTS.**
 
 ---
