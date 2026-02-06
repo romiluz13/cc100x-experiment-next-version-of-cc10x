@@ -38,6 +38,10 @@ CC100x includes domain expertise skills that agents load automatically via SKILL
 | `cc100x:code-review-patterns` | security/performance/quality reviewers, live-reviewer, hunter | Two-stage review, security checklist, LSP analysis |
 | `cc100x:planning-patterns` | planner | Plan structure, task granularity, risk assessment |
 | `cc100x:code-generation` | builder | Universal questions, pattern matching, minimal code |
+| `cc100x:github-research` | planner, investigator | External research via Octocode/GitHub, tiered fallbacks, checkpoint saves |
+| `cc100x:architecture-patterns` | builder, all reviewers, investigator, hunter, verifier, planner | Functionality-first design, C4 views, API design, integration patterns, decision framework |
+| `cc100x:frontend-patterns` | builder, all reviewers, investigator, hunter, verifier, planner | Loading states, accessibility (WCAG 2.1 AA), forms, animation, responsive design, component patterns |
+| `cc100x:brainstorming` | planner | Structured discovery, one-question-at-a-time, YAGNI, incremental design validation |
 
 These are loaded automatically by the lead's SKILL_HINTS mechanism. You don't need to invoke them manually.
 

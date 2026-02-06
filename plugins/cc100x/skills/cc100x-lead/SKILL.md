@@ -570,11 +570,20 @@ skills: cc100x:session-memory, cc100x:verification
 
 | Detected Pattern | Skill | Agents |
 |------------------|-------|--------|
-| External: new tech, unfamiliar library, complex integration | github-research | planner, investigator |
-| Debug exhausted: 3+ local attempts failed, external service error | github-research | investigator |
-| User explicitly requests: "research", "github", "octocode", "best practices" | github-research | planner, investigator |
+| **BUILD workflow** (any build/implement/create) | `cc100x:test-driven-development`, `cc100x:code-generation`, `cc100x:architecture-patterns`, `cc100x:frontend-patterns` | builder |
+| **REVIEW workflow** (any review/audit/check) | `cc100x:code-review-patterns`, `cc100x:architecture-patterns`, `cc100x:frontend-patterns` | security-reviewer, performance-reviewer, quality-reviewer, live-reviewer |
+| **DEBUG workflow** (any debug/fix/error) | `cc100x:debugging-patterns`, `cc100x:architecture-patterns`, `cc100x:frontend-patterns` | investigator |
+| **PLAN workflow** (any plan/design/architect) | `cc100x:planning-patterns`, `cc100x:brainstorming`, `cc100x:architecture-patterns`, `cc100x:frontend-patterns` | planner |
+| **BUILD/DEBUG post-build** (hunter phase) | `cc100x:code-review-patterns`, `cc100x:architecture-patterns`, `cc100x:frontend-patterns` | hunter |
+| **BUILD/DEBUG post-verification** (verifier phase) | `cc100x:debugging-patterns`, `cc100x:architecture-patterns`, `cc100x:frontend-patterns` | verifier |
+| External: new tech, unfamiliar library, complex integration | `cc100x:github-research` | planner, investigator |
+| Debug exhausted: 3+ local attempts failed, external service error | `cc100x:github-research` | investigator |
+| User explicitly requests: "research", "github", "octocode", "best practices" | `cc100x:github-research` | planner, investigator |
 
 **Detection runs BEFORE agent invocation. Pass detected skills in SKILL_HINTS.**
+
+**Workflow-based skills are ALWAYS passed for the matching workflow.** They are not conditional — every BUILD gets TDD+code-gen, every REVIEW gets code-review-patterns, etc. This mirrors CC10x's guaranteed skill loading via agent frontmatter.
+
 **Also check CLAUDE.md Complementary Skills table and include matching skills in SKILL_HINTS.**
 
 ---
@@ -687,6 +696,11 @@ WHEN any CC100X REM-FIX task COMPLETES:
 ### Execution Loop
 
 ```
+0. Enter delegate mode (FIRST):
+   Press **Shift+Tab** after team creation.
+   Lead MUST be in delegate mode before assigning ANY tasks.
+   This prevents lead from accidentally implementing code.
+
 1. Find runnable tasks:
    TaskList() → Find tasks where:
    - status = "pending"
@@ -820,6 +834,48 @@ These constraints come from the Agent Teams architecture. Violating them causes 
 5. **Teammates CAN see CLAUDE.md + project skills.** Unlike CC10x subagents, Agent Teams teammates load CLAUDE.md and project-level skills automatically.
 6. **No synchronization primitives.** Pair Build's builder-reviewer sync uses message-based polling, not blocking waits.
 7. **Delegate mode is MANDATORY.** Lead must enter delegate mode (Shift+Tab) after team creation to prevent accidentally implementing code.
+8. **Token cost awareness.** Agent Teams uses significantly more tokens than single-agent workflows. Each teammate has its own context window. Minimize unnecessary parallel spawns — only parallelize when the protocol requires it (e.g., 3 reviewers in Review Arena, multiple investigators in Bug Court).
+
+## Agent Teams Display & Controls
+
+| Action | Shortcut | When to Use |
+|--------|----------|-------------|
+| Enter delegate mode | **Shift+Tab** | After team creation (MANDATORY) |
+| Select teammate to view | **Shift+Up/Down** | Monitor teammate progress |
+| Toggle task list | **Ctrl+T** | Check task status during workflow |
+| Interrupt teammate | **Escape** | Stop a teammate that's stuck or off-track |
+
+## Model Selection Guidance
+
+When spawning teammates, model selection affects cost and capability:
+
+| Teammate | Recommended Model | Rationale |
+|----------|-------------------|-----------|
+| builder | `inherit` (Opus) | Needs full capability for TDD + implementation |
+| investigator | `inherit` (Opus) | Complex reasoning for hypothesis testing |
+| planner | `inherit` (Opus) | Architecture decisions need deep understanding |
+| security-reviewer | `inherit` (Opus) | Security analysis requires thoroughness |
+| performance-reviewer | `sonnet` | Performance patterns are more formulaic |
+| quality-reviewer | `sonnet` | Pattern matching is well-suited for Sonnet |
+| live-reviewer | `sonnet` | Quick feedback loop, doesn't need full Opus |
+| hunter | `sonnet` | Scan patterns are systematic, not creative |
+| verifier | `sonnet` | Test running and evidence collection |
+
+**Override rule:** If a teammate is struggling (e.g., missing issues), re-spawn with `inherit` (Opus).
+
+## Self-Claim Mode (Optional Optimization)
+
+In addition to lead-assigned task ownership, teammates can self-claim unblocked tasks:
+
+```
+After completing a task:
+1. Teammate calls TaskList()
+2. Finds task with status="pending", no owner, empty blockedBy
+3. Claims via TaskUpdate({ taskId, owner: "{my-name}", status: "in_progress" })
+4. Notifies lead: "Claimed task: {subject}"
+```
+
+**When to enable:** For experienced teams where task descriptions are self-contained. Lead can disable by explicitly assigning all tasks upfront.
 
 ---
 
@@ -836,16 +892,21 @@ These constraints come from the Agent Teams architecture. Violating them causes 
 9. **ALL_TASKS_COMPLETED** - All tasks (including Memory Update) status="completed"
 10. **CONTRACTS_VALIDATED** - All Router Contracts parsed and validated
 11. **MEMORY_UPDATED** - Before marking done
+12. **TEAM_SHUTDOWN** - Send shutdown_request to all teammates, wait for approvals, TeamDelete()
 
 ---
 
-## Team Shutdown
+## Team Shutdown (Gate #12)
 
-After workflow completes:
-1. Send shutdown_request to all teammates
-2. Wait for shutdown approvals
-3. Clean up team: `TeamDelete()`
-4. Report results to user
+After workflow completes AND memory is updated:
+1. Send `shutdown_request` to each teammate via `SendMessage(type="shutdown_request", recipient="{name}")`
+2. Wait for shutdown approvals from all teammates
+3. If teammate rejects shutdown → check if they have unfinished work, resolve, retry
+4. After all approvals received → `TeamDelete()` to clean up team resources
+5. Report results to user
+
+**Team Naming Convention:** `cc100x-{workflow}-{YYYYMMDD-HHMMSS}`
+Example: `cc100x-build-20260206-143022`, `cc100x-debug-20260206-150000`
 
 ---
 

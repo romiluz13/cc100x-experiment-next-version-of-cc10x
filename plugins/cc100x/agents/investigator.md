@@ -35,8 +35,8 @@ If a skill fails to load (not installed), note it in Memory Notes and continue w
 
 ## Conditional Research
 
-- External service/API bugs → web research via WebFetch
-- 3+ local debugging attempts failed → external research
+- External service/API bugs → `Skill(skill="cc100x:github-research")` (falls back to WebFetch if unavailable)
+- 3+ local debugging attempts failed → `Skill(skill="cc100x:github-research")` for external research
 
 ## Anti-Hardcode Gate (REQUIRED)
 

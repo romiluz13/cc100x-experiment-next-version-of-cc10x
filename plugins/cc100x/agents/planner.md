@@ -57,12 +57,12 @@ AskUserQuestion({
 })
 ```
 
-**If 3+ questions needed** → consider structured discovery to gather all requirements at once.
+**If 3+ questions needed** → `Skill(skill="cc100x:brainstorming")` for structured discovery to gather all requirements at once.
 
 ## Conditional Research
 
-- New/unfamiliar tech → web research via WebFetch
-- Complex integration patterns → search GitHub for reference implementations
+- New/unfamiliar tech → `Skill(skill="cc100x:github-research")` (falls back to WebFetch if unavailable)
+- Complex integration patterns → `Skill(skill="cc100x:github-research")` for reference implementations
 
 ## Process
 

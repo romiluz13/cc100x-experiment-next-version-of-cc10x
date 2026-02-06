@@ -7,7 +7,7 @@
 **Requires: Agent Teams enabled (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`)**
 
 <p align="center">
-  <strong>1 Lead</strong> &nbsp;•&nbsp; <strong>9 Agents</strong> &nbsp;•&nbsp; <strong>7 Skills</strong> &nbsp;•&nbsp; <strong>4 Workflows</strong>
+  <strong>1 Lead</strong> &nbsp;•&nbsp; <strong>9 Agents</strong> &nbsp;•&nbsp; <strong>8 Skills</strong> &nbsp;•&nbsp; <strong>4 Workflows</strong> &nbsp;•&nbsp; <strong>6 Domain Skills</strong>
 </p>
 
 <p align="center">
@@ -127,7 +127,7 @@ Reviewer: "LGTM"
 
 ---
 
-## The 7 Skills
+## The 8 Workflow Skills
 
 | Skill | Purpose |
 |-------|---------|
@@ -138,6 +138,40 @@ Reviewer: "LGTM"
 | **session-memory** | Context persistence across sessions |
 | **verification** | Evidence-before-claims enforcement |
 | **router-contract** | YAML contract format for all agents |
+| **github-research** | External code research via Octocode/GitHub with tiered fallbacks |
+
+## The 6 Domain Skills
+
+Domain skills provide deep expertise. Loaded automatically by the lead via SKILL_HINTS:
+
+| Skill | Used By | Purpose |
+|-------|---------|---------|
+| **debugging-patterns** | investigator, hunter, verifier | Systematic debugging, root cause tracing, LSP analysis |
+| **test-driven-development** | builder | TDD Iron Law, Red-Green-Refactor cycle |
+| **code-review-patterns** | reviewers, live-reviewer, hunter | Two-stage review, security checklist |
+| **planning-patterns** | planner | Plan structure, task granularity, risk assessment |
+| **code-generation** | builder | Pattern matching, minimal code, universal questions |
+| **github-research** | planner, investigator | External research, tiered fallbacks, checkpoint saves |
+
+---
+
+## What Makes CC100x TRULY 100x (Not Just Renamed CC10x)
+
+CC100x isn't just CC10x with Agent Teams bolted on. It's architecturally different:
+
+| Dimension | CC10x (Sequential) | CC100x (Agent Teams) |
+|-----------|---------------------|----------------------|
+| **Review quality** | 1 reviewer sees everything | 3 specialists see what others miss, then **cross-examine** |
+| **Debug speed** | 1 hypothesis at a time, try → fail → next | 3+ hypotheses **in parallel**, strongest evidence wins |
+| **Build safety** | Build → review (reviewer sees cold code) | Build + review **simultaneously** (reviewer sees hot code) |
+| **Error handling** | Hunter finds issues, builder may miss context | Hunter + Verifier + Remediation Loop (task-enforced) |
+| **Memory** | Session memory survives context loss | Same + **task-enforced** memory (can't skip Memory Update) |
+| **Skill loading** | Frontmatter injection (auto) | SKILL_HINTS (lead detects workflow, passes domain skills) |
+| **Research** | Lead does research inline | Full tiered research chain with checkpoints + persistence |
+| **Conflict resolution** | Router decides | **Agents debate**, lead arbitrates with evidence |
+| **Communication** | Hub-spoke (router relays) | **Peer-to-peer mesh** (agents message each other directly) |
+
+**The fundamental shift:** CC10x = one brain orchestrating one agent at a time. CC100x = one coordinator managing a team of specialists who challenge each other.
 
 ---
 
@@ -290,7 +324,8 @@ plugins/cc100x/
     ├── pair-build/SKILL.md
     ├── session-memory/SKILL.md
     ├── verification/SKILL.md
-    └── router-contract/SKILL.md
+    ├── router-contract/SKILL.md
+    └── github-research/SKILL.md
 ```
 
 ---
@@ -316,6 +351,33 @@ The lead uses these contracts to:
 - Decide whether to proceed or block
 - Resolve conflicts between agents
 - Persist memory notes
+
+---
+
+## Safety
+
+For safe modification of CC100x orchestration, use the companion safety skill:
+
+```
+/cc100x-orchestration-safety
+```
+
+This enforces extreme caution when editing lead, agents, or workflow skills. Available as a user-level skill at `~/.claude/skills/cc100x-orchestration-safety/SKILL.md`.
+
+---
+
+## Evolved From CC10x
+
+CC100x evolves from [CC10x](https://github.com/romiluz13/cc10x) (250+ commits, 12 skills, 6 agents). Everything that worked in CC10x is preserved:
+
+- All 8 orchestration invariants
+- Memory protocol (load-first, edit-verify, stable anchors)
+- Router Contract format (YAML machine-readable output)
+- TDD enforcement (Red-Green-Refactor)
+- Research persistence (docs/research/ + memory links)
+- Verification gates (evidence before claims)
+
+What's new is the **Agent Teams architecture** that enables parallel work, peer debate, and adversarial review.
 
 ---
 

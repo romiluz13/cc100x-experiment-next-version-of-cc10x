@@ -65,6 +65,7 @@ CC100x includes domain expertise skills that agents load automatically via SKILL
 | `cc100x:code-review-patterns` | security/performance/quality reviewers, live-reviewer, hunter | Two-stage review, security checklist, LSP analysis |
 | `cc100x:planning-patterns` | planner | Plan structure, task granularity, risk assessment |
 | `cc100x:code-generation` | builder | Universal questions, pattern matching, minimal code |
+| `cc100x:github-research` | planner, investigator | External research via Octocode/GitHub, tiered fallbacks, checkpoint saves |
 
 These are loaded automatically by the lead's SKILL_HINTS mechanism. You don't need to invoke them manually.
 
@@ -253,7 +254,8 @@ cc100x/
 │       ├── pair-build/SKILL.md
 │       ├── session-memory/SKILL.md
 │       ├── verification/SKILL.md
-│       └── router-contract/SKILL.md
+│       ├── router-contract/SKILL.md
+│       └── github-research/SKILL.md
 ├── .claude-plugin/
 │   └── marketplace.json
 ├── README.md
