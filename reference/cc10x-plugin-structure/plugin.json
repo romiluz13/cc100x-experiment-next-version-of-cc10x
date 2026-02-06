@@ -1,0 +1,25 @@
+{
+  "name": "cc10x",
+  "version": "6.0.18",
+  "description": "Orchestrated development workflow with specialized subagents and composable skills. Features smart routing via cc10x-router, TDD-first building, multi-dimensional code review, evidence-based debugging, pre-implementation checklists, self-critique gates, and 7-layer memory architecture.",
+  "author": {
+    "name": "Rom Iluz",
+    "email": "rom@iluz.net",
+    "url": "https://github.com/romiluz13"
+  },
+  "homepage": "https://github.com/romiluz13/cc10x",
+  "repository": "https://github.com/romiluz13/cc10x",
+  "license": "MIT",
+  "keywords": [
+    "workflow-routing",
+    "code-review",
+    "tdd",
+    "debugging",
+    "planning",
+    "architecture",
+    "frontend",
+    "verification",
+    "lean-skills",
+    "claude-code"
+  ]
+}

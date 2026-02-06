@@ -1,0 +1,26 @@
+{
+  "name": "cc100x",
+  "version": "0.1.0",
+  "description": "Next-Gen Orchestration on Agent Teams for Claude Code",
+  "author": {
+    "name": "Rom Iluz",
+    "email": "rom@iluz.net",
+    "url": "https://github.com/romiluz13"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/romiluz13/cc100x"
+  },
+  "keywords": [
+    "claude-code",
+    "agent-teams",
+    "orchestration",
+    "adversarial-review",
+    "competing-hypotheses",
+    "pair-building",
+    "code-review",
+    "tdd",
+    "debugging"
+  ]
+}
