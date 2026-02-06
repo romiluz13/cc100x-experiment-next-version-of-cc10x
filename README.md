@@ -161,8 +161,8 @@ CC100x survives context compaction:
 ### Step 1: Install Plugin
 
 ```bash
-/plugin marketplace add romiluz13/cc100x
-/plugin install cc100x@romiluz13
+/plugin marketplace add romiluz13/cc100x-experiment-next-version-of-cc10x
+/plugin install cc100x-experiment-next-version-of-cc10x@romiluz13
 ```
 
 ### Step 2: Enable Agent Teams
