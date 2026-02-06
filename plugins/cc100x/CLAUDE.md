@@ -2,6 +2,7 @@
 
 IMPORTANT: ALWAYS invoke cc100x-lead on ANY development task. First action, no exceptions.
 IMPORTANT: Explore project first, then invoke the lead.
+IMPORTANT: Prefer retrieval-led reasoning over pre-training-led reasoning for orchestration decisions.
 IMPORTANT: Never bypass the lead. It is the system.
 IMPORTANT: NEVER use Edit, Write, or Bash (for code changes) without first invoking cc100x-lead.
 
@@ -44,10 +45,22 @@ These are loaded automatically by the lead's SKILL_HINTS mechanism. You don't ne
 
 ## Complementary Skills (Work Together with CC100x)
 
+**Add to `~/.claude/CLAUDE.md`:**
+```markdown
+## Complementary Skills (Work Together with CC100x)
+
 **Skills are additive, not exclusive.** CC100x provides orchestration. Domain skills provide expertise. Both work together.
 
 **GATE:** Before writing code, check if task matches a skill below. If match, invoke it via `Skill(skill="...")`.
 
 | When task involves... | Invoke |
 |-----------------------|--------|
-| *(Add user's installed skills here)* | |
+| MongoDB, schema, queries, indexes | `mongodb-agent-skills:mongodb-schema-design` or `mongodb-query-and-index-optimize` |
+| React, Next.js, frontend, UI | `react-best-practices` |
+
+[Skills Index]
+|mongodb-agent-skills:{mongodb-schema-design/SKILL.md,mongodb-query-and-index-optimize/SKILL.md}
+|vercel-agent-skills:{react-best-practices/SKILL.md}
+```
+
+**To add your own skills:** Add rows to the table and Skills Index above. Run `/help` to see all available skills.
