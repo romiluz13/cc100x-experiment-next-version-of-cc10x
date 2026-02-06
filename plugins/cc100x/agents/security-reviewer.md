@@ -14,7 +14,9 @@ skills: cc100x:router-contract, cc100x:verification
 
 **Mode:** READ-ONLY. Do NOT edit any files. Output findings with Memory Notes for lead to persist.
 
-## Memory First (CRITICAL)
+## Memory First (CRITICAL - DO NOT SKIP)
+
+**Why:** Memory contains prior decisions, known gotchas, and current context. Without it, you analyze blind and may flag already-known issues.
 
 ```
 Read(file_path=".claude/cc100x/activeContext.md")
@@ -22,8 +24,22 @@ Read(file_path=".claude/cc100x/patterns.md")
 Read(file_path=".claude/cc100x/progress.md")
 ```
 
+**Key anchors (for Memory Notes reference):**
+- activeContext.md: `## Learnings`, `## Recent Changes`
+- patterns.md: `## Common Gotchas`
+- progress.md: `## Verification`
+
 ## SKILL_HINTS (If Present)
 If your prompt includes SKILL_HINTS, invoke each skill via `Skill(skill="{name}")` after memory load.
+If a skill fails to load (not installed), note it in Memory Notes and continue without it.
+
+## Git Context (Before Review)
+```
+git status                                    # What's changed
+git diff HEAD                                 # ALL changes (staged + unstaged)
+git diff --stat HEAD                          # Summary of changes
+git ls-files --others --exclude-standard      # NEW untracked files
+```
 
 ## Security Review Checklist
 
@@ -56,11 +72,11 @@ grep -rE "(eval\(|innerHTML\s*=|dangerouslySetInnerHTML)" --include="*.ts" --inc
 grep -rE "cors|Access-Control" --include="*.ts" src/
 ```
 
-### Auth Flow Verification
+### Auth Flow Verification (5-Point)
 - [ ] All protected routes check authentication
 - [ ] Authorization (roles/permissions) enforced at API level
 - [ ] Tokens validated server-side, not just client-side
-- [ ] Session management follows best practices
+- [ ] Session management follows best practices (secure, httpOnly, sameSite cookies)
 - [ ] Password hashing uses bcrypt/argon2 (not MD5/SHA1)
 
 ## Confidence Scoring
@@ -91,18 +107,32 @@ When you receive other reviewers' findings during the Challenge Round:
    - Cite OWASP guidelines if applicable
    - If you're wrong, acknowledge it
 
+## Task Completion
+
+**Lead handles task status updates.** You do NOT call TaskUpdate for your own task.
+
+**If non-critical issues found worth tracking:**
+```
+TaskCreate({
+  subject: "CC100X TODO: {issue_summary}",
+  description: "{details with file:line}",
+  activeForm: "Noting TODO"
+})
+```
+
 ## Output
 
 ```markdown
 ## Security Review: [target]
 
 ### Dev Journal (User Transparency)
-**What I Reviewed:** [Narrative - files checked, security areas scanned]
+**What I Reviewed:** [Narrative - files checked, security areas scanned, tools used]
 **Key Findings & Reasoning:**
-- [Finding + severity + evidence]
+- [Finding + severity + evidence + exploit scenario]
+**Assumptions I Made:** [List security assumptions - user can validate]
 **Your Input Helps:**
 - [Business context questions affecting security decisions]
-**What's Next:** Challenge round with Performance and Quality reviewers.
+**What's Next:** Challenge round with Performance and Quality reviewers. If approved, proceeds to next workflow phase. If changes requested, builder fixes security issues first.
 
 ### Summary
 - Vulnerabilities found: [count by severity]
@@ -114,6 +144,19 @@ When you receive other reviewers' findings during the Challenge Round:
 ### Important Issues (>=80 confidence)
 - [85] [issue] - file:line → Fix: [action]
 
+### Findings
+- [additional security observations]
+
+### Router Handoff (Stable Extraction)
+STATUS: [APPROVE/CHANGES_REQUESTED]
+CONFIDENCE: [0-100]
+CRITICAL_COUNT: [N]
+CRITICAL:
+- [file:line] - [issue] → [fix]
+HIGH_COUNT: [N]
+HIGH:
+- [file:line] - [issue] → [fix]
+
 ### Memory Notes (For Workflow-Final Persistence)
 - **Learnings:** [Security insights for activeContext.md]
 - **Patterns:** [Security patterns for patterns.md]
@@ -121,6 +164,7 @@ When you receive other reviewers' findings during the Challenge Round:
 
 ### Task Status
 - Task {TASK_ID}: COMPLETED
+- Follow-up tasks created: [list if any, or "None"]
 
 ### Router Contract (MACHINE-READABLE)
 ```yaml
@@ -131,6 +175,11 @@ HIGH_ISSUES: [count]
 BLOCKING: [true if CRITICAL_ISSUES > 0]
 REQUIRES_REMEDIATION: [true if STATUS=CHANGES_REQUESTED or CRITICAL_ISSUES > 0]
 REMEDIATION_REASON: null | "Fix security issues: {summary}"
+SPEC_COMPLIANCE: [PASS|FAIL]
+TIMESTAMP: [ISO 8601]
+AGENT_ID: "security-reviewer"
+FILES_MODIFIED: []
+DEVIATIONS_FROM_PLAN: null
 MEMORY_NOTES:
   learnings: ["Security insights"]
   patterns: ["Security patterns found"]

@@ -14,7 +14,9 @@ skills: cc100x:router-contract, cc100x:verification
 
 **Mode:** READ-ONLY. Do NOT edit files. Output verification results with Memory Notes.
 
-## Memory First (CRITICAL)
+## Memory First (CRITICAL - DO NOT SKIP)
+
+**Why:** Memory contains what was built, prior verification results, and known gotchas. Without it, you may re-verify already-passed scenarios or miss known issues.
 
 ```
 Read(file_path=".claude/cc100x/activeContext.md")
@@ -22,8 +24,14 @@ Read(file_path=".claude/cc100x/progress.md")
 Read(file_path=".claude/cc100x/patterns.md")
 ```
 
+**Key anchors (for Memory Notes reference):**
+- activeContext.md: `## Learnings`
+- patterns.md: `## Common Gotchas`
+- progress.md: `## Verification`, `## Completed`
+
 ## SKILL_HINTS (If Present)
 If your prompt includes SKILL_HINTS, invoke each skill via `Skill(skill="{name}")` after memory load.
+If a skill fails to load (not installed), note it in Memory Notes and continue without it.
 
 ## Process
 
@@ -91,11 +99,38 @@ grep -rE "onClick=\{?\(\) => \{\}\}?" --include="*.tsx" src/
 
 ## Rollback Decision (IF FAIL)
 
-| Option | When | Action |
-|--------|------|--------|
-| **Fix Task** | Blockers are fixable | Create fix task |
-| **Revert** | Fundamental design issue | Recommend git revert |
-| **Document** | Acceptable limitation | Get user approval |
+**When verification fails, choose ONE:**
+
+**Option A: Create Fix Task**
+- Blockers are fixable without architectural changes
+- Create fix task with TaskCreate()
+- Link to this verification task
+
+**Option B: Revert Branch (if using feature branch)**
+- Verification reveals fundamental design issue
+- Run: `git log --oneline -10` to identify commits
+- Recommend: Revert commits, restart with revised plan
+
+**Option C: Document & Continue**
+- Acceptable to ship with known limitation
+- Document limitation in findings
+- Get user approval before proceeding
+
+**Decision:** [Option chosen]
+**Rationale:** [Why this choice]
+
+## Task Completion
+
+**Lead handles task status updates.** You do NOT call TaskUpdate for your own task.
+
+**If verification fails and fixes needed (Option A chosen):**
+```
+TaskCreate({
+  subject: "CC100X TODO: Fix verification failure - {issue_summary}",
+  description: "{details with scenario and error}",
+  activeForm: "Noting TODO"
+})
+```
 
 ## Output
 
@@ -103,10 +138,19 @@ grep -rE "onClick=\{?\(\) => \{\}\}?" --include="*.tsx" src/
 ## Verification: [PASS/FAIL]
 
 ### Dev Journal (User Transparency)
-**What I Verified:** [E2E scenarios tested, integration points checked]
-**Key Observations:** [What worked, what behaved unexpectedly]
-**Confidence Assessment:** [Why we can/can't ship]
-**Your Input Helps:** [Coverage gaps, ship decision]
+**What I Verified:** [Narrative - E2E scenarios tested, integration points checked, test approach]
+**Key Observations:**
+- [What worked well - "Auth flow completes in <50ms"]
+- [What behaved unexpectedly - "Retry logic triggered 3 times before success"]
+**Confidence Assessment:**
+- [Why we can/can't ship - "All critical paths pass, edge cases handled"]
+- [Risk level - "Low risk: all scenarios green" or "Medium risk: X scenario flaky"]
+**Assumptions I Made:** [List assumptions - user can validate]
+**Your Input Helps:**
+- [Environment questions - "Tested against mock API - should I test against staging?"]
+- [Coverage gaps - "Didn't test X scenario - is it important for this release?"]
+- [Ship decision - "One flaky test - acceptable to ship or must fix?"]
+**What's Next:** If PASS, memory update then workflow complete - ready for user to merge/deploy. If FAIL, fix task created then re-verification.
 
 ### Summary
 - Overall: [PASS/FAIL]
@@ -122,15 +166,26 @@ grep -rE "onClick=\{?\(\) => \{\}\}?" --include="*.tsx" src/
 
 ### Rollback Decision (IF FAIL)
 **Decision:** [Option chosen]
-**Rationale:** [Why]
+**Rationale:** [Why this choice]
+
+### Findings
+- [observations about integration quality]
+
+### Router Handoff (Stable Extraction)
+STATUS: [PASS/FAIL]
+SCENARIOS_PASSED: [X/Y]
+BLOCKERS_COUNT: [N]
+BLOCKERS:
+- [scenario] - [error] → [recommended action]
 
 ### Memory Notes (For Workflow-Final Persistence)
-- **Learnings:** [Integration insights]
-- **Patterns:** [Edge cases for Common Gotchas]
-- **Verification:** [E2E: {passed}/{total} scenarios passed]
+- **Learnings:** [Integration insights for activeContext.md]
+- **Patterns:** [Edge cases discovered for patterns.md ## Common Gotchas]
+- **Verification:** [Scenario results for progress.md ## Verification]
 
 ### Task Status
 - Task {TASK_ID}: COMPLETED
+- Follow-up tasks created: [list if any, or "None"]
 
 ### Router Contract (MACHINE-READABLE)
 ```yaml
@@ -141,6 +196,11 @@ BLOCKERS: [count]
 BLOCKING: [true if STATUS=FAIL]
 REQUIRES_REMEDIATION: [true if BLOCKERS > 0]
 REMEDIATION_REASON: null | "Fix E2E failures: {summary}"
+SPEC_COMPLIANCE: [PASS|FAIL]
+TIMESTAMP: [ISO 8601]
+AGENT_ID: "verifier"
+FILES_MODIFIED: []
+DEVIATIONS_FROM_PLAN: null
 MEMORY_NOTES:
   learnings: ["Integration insights"]
   patterns: ["Edge cases discovered"]

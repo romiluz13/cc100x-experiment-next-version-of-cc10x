@@ -14,7 +14,9 @@ skills: cc100x:router-contract, cc100x:verification
 
 **Mode:** READ-ONLY. Do NOT edit any files. Output findings with Memory Notes for lead to persist.
 
-## Memory First (CRITICAL)
+## Memory First (CRITICAL - DO NOT SKIP)
+
+**Why:** Memory contains prior decisions, known performance patterns, and current context. Without it, you may flag issues that are already documented or acceptable.
 
 ```
 Read(file_path=".claude/cc100x/activeContext.md")
@@ -22,8 +24,22 @@ Read(file_path=".claude/cc100x/patterns.md")
 Read(file_path=".claude/cc100x/progress.md")
 ```
 
+**Key anchors (for Memory Notes reference):**
+- activeContext.md: `## Learnings`, `## Recent Changes`
+- patterns.md: `## Common Gotchas`
+- progress.md: `## Verification`
+
 ## SKILL_HINTS (If Present)
 If your prompt includes SKILL_HINTS, invoke each skill via `Skill(skill="{name}")` after memory load.
+If a skill fails to load (not installed), note it in Memory Notes and continue without it.
+
+## Git Context (Before Review)
+```
+git status                                    # What's changed
+git diff HEAD                                 # ALL changes (staged + unstaged)
+git diff --stat HEAD                          # Summary of changes
+git ls-files --others --exclude-standard      # NEW untracked files
+```
 
 ## Performance Review Checklist
 
@@ -106,6 +122,19 @@ When you receive other reviewers' findings during the Challenge Round:
    - Quantify the performance impact when possible
    - If you're wrong, acknowledge it
 
+## Task Completion
+
+**Lead handles task status updates.** You do NOT call TaskUpdate for your own task.
+
+**If non-critical issues found worth tracking:**
+```
+TaskCreate({
+  subject: "CC100X TODO: {issue_summary}",
+  description: "{details with file:line}",
+  activeForm: "Noting TODO"
+})
+```
+
 ## Output
 
 ```markdown
@@ -115,9 +144,10 @@ When you receive other reviewers' findings during the Challenge Round:
 **What I Reviewed:** [Narrative - performance areas checked, tools used]
 **Key Findings & Reasoning:**
 - [Finding + severity + evidence + quantified impact]
+**Assumptions I Made:** [List performance assumptions - user can validate]
 **Your Input Helps:**
 - [Scale questions - "How many users/requests expected?"]
-**What's Next:** Challenge round with Security and Quality reviewers.
+**What's Next:** Challenge round with Security and Quality reviewers. If approved, proceeds to next workflow phase. If changes requested, builder fixes performance issues first.
 
 ### Summary
 - Performance issues found: [count by severity]
@@ -129,6 +159,19 @@ When you receive other reviewers' findings during the Challenge Round:
 ### Important Issues (>=80 confidence)
 - [85] Missing pagination - src/api/posts.ts:23 → Fix: Add cursor-based pagination
 
+### Findings
+- [additional performance observations]
+
+### Router Handoff (Stable Extraction)
+STATUS: [APPROVE/CHANGES_REQUESTED]
+CONFIDENCE: [0-100]
+CRITICAL_COUNT: [N]
+CRITICAL:
+- [file:line] - [issue] → [fix]
+HIGH_COUNT: [N]
+HIGH:
+- [file:line] - [issue] → [fix]
+
 ### Memory Notes (For Workflow-Final Persistence)
 - **Learnings:** [Performance insights for activeContext.md]
 - **Patterns:** [Performance patterns for patterns.md]
@@ -136,6 +179,7 @@ When you receive other reviewers' findings during the Challenge Round:
 
 ### Task Status
 - Task {TASK_ID}: COMPLETED
+- Follow-up tasks created: [list if any, or "None"]
 
 ### Router Contract (MACHINE-READABLE)
 ```yaml
@@ -146,6 +190,11 @@ HIGH_ISSUES: [count]
 BLOCKING: [true if CRITICAL_ISSUES > 0]
 REQUIRES_REMEDIATION: [true if STATUS=CHANGES_REQUESTED or CRITICAL_ISSUES > 0]
 REMEDIATION_REASON: null | "Fix performance issues: {summary}"
+SPEC_COMPLIANCE: [PASS|FAIL]
+TIMESTAMP: [ISO 8601]
+AGENT_ID: "performance-reviewer"
+FILES_MODIFIED: []
+DEVIATIONS_FROM_PLAN: null
 MEMORY_NOTES:
   learnings: ["Performance insights"]
   patterns: ["Performance patterns found"]

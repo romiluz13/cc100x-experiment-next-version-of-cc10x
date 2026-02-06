@@ -26,6 +26,22 @@ CC100x requires Agent Teams to be enabled in `~/.claude/settings.json`:
 
 ---
 
+## Domain Skills (Loaded by CC100x Agents)
+
+CC100x includes domain expertise skills that agents load automatically via SKILL_HINTS:
+
+| Skill | Used By | Purpose |
+|-------|---------|---------|
+| `cc100x:debugging-patterns` | investigator, hunter, verifier | Systematic debugging, root cause tracing, LSP-powered analysis |
+| `cc100x:test-driven-development` | builder | TDD Iron Law, Red-Green-Refactor, test quality |
+| `cc100x:code-review-patterns` | security/performance/quality reviewers, live-reviewer, hunter | Two-stage review, security checklist, LSP analysis |
+| `cc100x:planning-patterns` | planner | Plan structure, task granularity, risk assessment |
+| `cc100x:code-generation` | builder | Universal questions, pattern matching, minimal code |
+
+These are loaded automatically by the lead's SKILL_HINTS mechanism. You don't need to invoke them manually.
+
+---
+
 ## Complementary Skills (Work Together with CC100x)
 
 **Skills are additive, not exclusive.** CC100x provides orchestration. Domain skills provide expertise. Both work together.
