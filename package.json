@@ -12,6 +12,9 @@
     "type": "git",
     "url": "https://github.com/romiluz13/cc100x"
   },
+  "scripts": {
+    "check:functional-bible": "bash scripts/check-functional-bible-drift.sh"
+  },
   "keywords": [
     "claude-code",
     "agent-teams",
