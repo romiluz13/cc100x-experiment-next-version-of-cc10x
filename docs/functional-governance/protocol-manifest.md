@@ -55,12 +55,15 @@ Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:80`
 ## Task DAG and Completion Canon
 
 - Workflows are task-graph enforced via `TaskCreate`/`TaskUpdate`.
+- Workflow task hierarchy is created in the team-scoped task list after team creation.
 - BUILD topology is guarded: required tasks/blockers are validated pre-execution and pre-verifier.
 - No direct shortcut from hunter/remediation to verifier.
 - Memory Update task is mandatory in BUILD/DEBUG/REVIEW/PLAN.
 - Workflow completion requires all tasks complete, including Memory Update and successful TEAM_SHUTDOWN.
 
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:202`
+Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:222`
+Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:243`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:825`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:849`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:310`
@@ -166,8 +169,8 @@ Mandatory gates include:
 - `AGENT_TEAMS_READY`
 - `MEMORY_LOADED`
 - `TASKS_CHECKED`
-- `TASKS_CREATED`
 - `TEAM_CREATED`
+- `TASKS_CREATED`
 - `CONTRACTS_VALIDATED`
 - `ALL_TASKS_COMPLETED`
 - `MEMORY_UPDATED`

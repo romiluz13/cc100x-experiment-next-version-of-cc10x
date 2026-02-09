@@ -39,6 +39,7 @@ It is intentionally behavior-first (not synthetic scoring-first).
 
 ### Task orchestration
 - [ ] Workflow creates explicit `CC100X ...` task hierarchy.
+- [ ] Workflow task hierarchy is created in the team-scoped task list (post-`TeamCreate`), not in a stale pre-team context.
 - [ ] Dependencies are DAG-safe (`addBlockedBy` forward-only).
 - [ ] Parallel phases run in parallel only when protocol requires it.
 - [ ] Workflow is not considered complete before `CC100X Memory Update` completes.
@@ -72,8 +73,8 @@ Expected gate flow:
 5. `RESEARCH_EXECUTED` (conditional)
 6. `RESEARCH_PERSISTED` (conditional)
 7. `REQUIREMENTS_CLARIFIED` (BUILD)
-8. `TASKS_CREATED`
-9. `TEAM_CREATED`
+8. `TEAM_CREATED`
+9. `TASKS_CREATED`
 10. `CONTRACTS_VALIDATED`
 11. `ALL_TASKS_COMPLETED`
 12. `MEMORY_UPDATED`

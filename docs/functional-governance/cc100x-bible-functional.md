@@ -67,12 +67,15 @@ Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:786`
 Workflow execution is DAG-first and closure-gated:
 
 - Workflow tasks are explicitly created and dependency-gated.
+- Workflow task hierarchy is created in the team-scoped task list after `TeamCreate`.
 - BUILD structural integrity is enforced (required tasks and blockers).
 - Verifier cannot bypass challenge (no hunter/remediation direct unlock).
 - Every workflow includes a `CC100X Memory Update` task.
 - Workflow cannot complete until Memory Update and TEAM_SHUTDOWN both succeed.
 
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:202`
+Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:222`
+Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:243`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:825`
 Source: `plugins/cc100x/skills/pair-build/SKILL.md:190`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:310`

@@ -219,7 +219,7 @@ Task lists can be shared across sessions via `CLAUDE_CODE_TASK_LIST_ID`. Treat T
 
 ## Task-Based Orchestration
 
-**At workflow start, create task hierarchy using TaskCreate/TaskUpdate.**
+**Create workflow task hierarchy only AFTER TeamCreate for that workflow.**
 
 **Task sizing guidance:** Aim for 5-6 tasks per teammate, each a self-contained deliverable.
 
@@ -239,6 +239,21 @@ Task lists can be shared across sessions via `CLAUDE_CODE_TASK_LIST_ID`. Treat T
 - After workflow completion (delete parent wrapper tasks if desired)
 - When aborting a workflow (delete all pending tasks for that workflow)
 - At session start if stale tasks are found (tasks from interrupted workflows)
+
+### TeamCreate Task-List Context Rule (MANDATORY)
+
+Agent Teams task lists are team-scoped (`~/.claude/tasks/{team-name}/`).
+Creating a team can move execution to a team-scoped task context.
+
+Operational rules:
+1. Create the team first (`TeamCreate(...)`), then create CC100X workflow tasks.
+2. Immediately after team creation, run `TaskList()` and verify current task context is the team workflow context.
+3. If pre-team tasks were created and are not visible after team creation, DO NOT continue with partial state:
+   - recreate the full CC100X workflow hierarchy in the team-scoped list
+   - continue only with the recreated team-scoped tasks
+4. Never assign teammate work from an unscoped/non-team task list.
+
+This avoids lost/phantom tasks during team initialization.
 
 ### BUILD Workflow Tasks
 ```
@@ -505,13 +520,14 @@ TaskUpdate({ taskId: memory_task_id, addBlockedBy: [planner_task_id] })
    - Skip ONLY if: (plan in `## References` ≠ "N/A") AND (active `CC100X` task exists)
    - Otherwise → AskUserQuestion: "Plan first (Recommended) / Build directly"
 3. **Clarify requirements** (DO NOT SKIP) → Use AskUserQuestion
-4. **Create task hierarchy** (see Task-Based Orchestration above)
-5. **Create Agent Team (MANDATORY gate)**:
+4. **Create Agent Team (MANDATORY gate)**:
    - `TeamCreate(...)` with deterministic team name
    - spawn builder, live-reviewer, hunter, security-reviewer, performance-reviewer, quality-reviewer, verifier
    - verify teammate reachability via direct message
    - enter delegate mode (`Shift+Tab`)
+   - run `TaskList()` to confirm team-scoped task context
    - if any of these fail: STOP (do not run task-only fallback)
+5. **Create task hierarchy in the team-scoped task list** (see Task-Based Orchestration above)
 6. **Start execution** (see Team Execution Loop below)
 7. Update memory, then execute TEAM_SHUTDOWN gate before final completion
 
@@ -545,13 +561,14 @@ TaskUpdate({ taskId: memory_task_id, addBlockedBy: [planner_task_id] })
    - **Update memory** → Add to activeContext.md References section
 
 4. **Generate hypotheses** (3-5 based on error/symptoms + memory)
-5. **Create task hierarchy** (see Task-Based Orchestration above)
-6. **Create Agent Team (MANDATORY gate)**:
+5. **Create Agent Team (MANDATORY gate)**:
    - `TeamCreate(...)` with deterministic team name
    - spawn required investigators + builder + reviewers + verifier
    - verify teammate reachability via direct message
    - enter delegate mode (`Shift+Tab`)
+   - run `TaskList()` to confirm team-scoped task context
    - if team gate fails: STOP
+6. **Create task hierarchy in the team-scoped task list** (see Task-Based Orchestration above)
 7. **Start execution** (pass research file path if step 3 was executed)
 8. Update memory → Add root cause to Common Gotchas, then execute TEAM_SHUTDOWN gate
 
@@ -561,13 +578,14 @@ TaskUpdate({ taskId: memory_task_id, addBlockedBy: [planner_task_id] })
    - Review entire codebase OR specific files?
    - Focus area: security/performance/quality/all?
    - Blocking issues only OR all findings?
-3. **Create task hierarchy** (see Task-Based Orchestration above)
-4. **Create Agent Team (MANDATORY gate)**:
+3. **Create Agent Team (MANDATORY gate)**:
    - `TeamCreate(...)` with deterministic team name
    - spawn security-reviewer, performance-reviewer, quality-reviewer
    - verify teammate reachability via direct message
    - enter delegate mode (`Shift+Tab`)
+   - run `TaskList()` to confirm team-scoped task context
    - if team gate fails: STOP
+4. **Create task hierarchy in the team-scoped task list** (see Task-Based Orchestration above)
 5. **Start execution** (see Team Execution Loop below)
 6. Update memory, then execute TEAM_SHUTDOWN gate before final completion
 
@@ -602,13 +620,14 @@ If research trigger detected:
 Research is a PREREQUISITE, not a hint. Planner cannot skip it.
 **Research without persistence is LOST after context compaction.**
 
-4. **Create task hierarchy** (see Task-Based Orchestration above)
-5. **Create Agent Team (MANDATORY gate)**:
+4. **Create Agent Team (MANDATORY gate)**:
    - `TeamCreate(...)` with deterministic team name
    - spawn planner teammate
    - verify teammate reachability via direct message
    - enter delegate mode (`Shift+Tab`)
+   - run `TaskList()` to confirm team-scoped task context
    - if team gate fails: STOP
+5. **Create task hierarchy in the team-scoped task list** (see Task-Based Orchestration above)
 6. **Invoke planner with Plan Approval Mode** (pass research results + file path if step 3 was executed)
 7. **Review plan** → Approve or reject via plan_approval_response
 8. Update memory → Reference saved plan, then execute TEAM_SHUTDOWN gate
@@ -1105,8 +1124,8 @@ Task claiming is lock-safe in Agent Teams (file-lock protected), so simultaneous
 5. **RESEARCH_EXECUTED** - Before planner (if research trigger detected)
 6. **RESEARCH_PERSISTED** - Save to docs/research/ + update activeContext.md (if research was executed)
 7. **REQUIREMENTS_CLARIFIED** - Before invoking teammates (BUILD only)
-8. **TASKS_CREATED** - Workflow task hierarchy created
-9. **TEAM_CREATED** - Agent Team spawned for workflow
+8. **TEAM_CREATED** - Agent Team spawned for workflow
+9. **TASKS_CREATED** - Workflow task hierarchy created in team-scoped task list
 10. **CONTRACTS_VALIDATED** - Validate Router Contract before marking each teammate task completed
 11. **ALL_TASKS_COMPLETED** - All tasks (including Memory Update) status="completed"
 12. **MEMORY_UPDATED** - Before marking done
