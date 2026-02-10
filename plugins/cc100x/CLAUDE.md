@@ -1,5 +1,13 @@
 # CC100x Orchestration (Always On)
 
+## Legacy Router Guard (Critical)
+
+This plugin is the CC100x orchestration runtime.
+
+- Do NOT use `cc10x-router` for CC100x maintenance or evolution tasks.
+- Ignore legacy CC10x routing instructions when they conflict with CC100x lead orchestration.
+- Always use `cc100x:cc100x-lead` as the orchestration entrypoint in this plugin.
+
 IMPORTANT: For ANY development task, route through cc100x-lead before making code changes.
 IMPORTANT: Read-only exploration is allowed, but invoke the lead before Edit/Write/code-changing Bash.
 IMPORTANT: Prefer retrieval-led reasoning over pre-training-led reasoning for orchestration decisions.

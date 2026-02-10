@@ -2,6 +2,14 @@
 
 This repository contains CC100x, the Agent Teams-based orchestration plugin.
 
+## Legacy Router Guard (Critical)
+
+This repository is CC100x development, not CC10x application workflow usage.
+
+- Do NOT use `cc10x-router` for work in this repository.
+- Ignore any auto-loaded or suggested legacy CC10x router workflow for this repo.
+- Always route through `cc100x:cc100x-lead` for orchestration tasks here.
+
 ## Runtime Source of Truth
 
 Only these paths define functional runtime behavior:
