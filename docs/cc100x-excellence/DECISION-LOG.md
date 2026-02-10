@@ -110,6 +110,21 @@ No major orchestration change should be considered final without a decision entr
 - **Evidence:** `scripts/eval/run-benchmark.sh`, `scripts/eval/score-benchmark.sh`, `scripts/lint-cc100x-protocol-integrity.sh`, `package.json`.
 - **Follow-ups:** Execute deterministic benchmark runs, produce `summary.json` and `scorecard.json`, then complete Phase D gate evidence.
 
+## DEC-20260210-002
+- **Status:** APPROVED
+- **Date:** 2026-02-10
+- **Phase:** D
+- **Title:** Approve borrow strategy with harmony-first fit rules
+- **Owner:** @rom.iluz
+- **Scope:** `docs/cc100x-excellence/BORROW-STRATEGY-NEURAL-HARMONY.md`, `docs/cc100x-excellence/MASTER-PLAN.md`
+- **Context:** Need a single strategy for integrating external ideas (Gastown, Superpowers, GSD, BMAD, Agent-OS concepts) without introducing orchestration chaos.
+- **Decision:** Adopt a phased S1-S4 borrow strategy with strict fit filters, no mandatory hooks, no default role expansion, and a final completeness gate.
+- **Alternatives Considered:** Ad-hoc per-file borrowing; rejected due to high conflict/redundancy risk.
+- **Risk Assessment:** Medium
+- **Rollback Plan:** Remove strategy references from master plan and continue deterministic baseline only.
+- **Evidence:** `docs/cc100x-excellence/BORROW-STRATEGY-NEURAL-HARMONY.md`, `docs/cc100x-excellence/MASTER-PLAN.md`.
+- **Follow-ups:** Execute S1 first, validate with `npm run check:cc100x`, then progress sequentially.
+
 ## Pending Decisions
 1. DEC-Phase-B profile semantics finalization (`deterministic/adaptive/turbo-quality`).
 2. DEC-Phase-C Router Contract v2 field set and strictness strategy.

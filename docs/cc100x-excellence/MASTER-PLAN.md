@@ -65,6 +65,7 @@ This plan is **compaction-safe** and should be treated as the single source of t
 2. `docs/cc100x-excellence/KPI-SCORECARD.md`
 3. `docs/cc100x-excellence/BENCHMARK-CASES.md`
 4. `docs/cc100x-excellence/DECISION-LOG.md`
+5. `docs/cc100x-excellence/BORROW-STRATEGY-NEURAL-HARMONY.md`
 5. Runtime hardening across:
    - `plugins/cc100x/skills/cc100x-lead/SKILL.md`
    - `plugins/cc100x/skills/router-contract/SKILL.md`
@@ -245,10 +246,10 @@ CC100x can be called best-in-class only if:
 ---
 
 ## 12) Next Action List (Immediate)
-1. Execute deterministic benchmark corpus and persist artifacts in `artifacts/eval/<run-id>/deterministic/`.
-2. Score run with `scripts/eval/score-benchmark.sh` and review hard-gate pass/fail.
-3. Update decision log with Phase D evidence and release recommendation.
-4. Reassess whether additional execution profiles are needed after deterministic benchmark results.
+1. Execute Phase S1 from `BORROW-STRATEGY-NEURAL-HARMONY.md` (state vocabulary + severity escalation normalization).
+2. Run `npm run check:cc100x` and verify no protocol regressions.
+3. Update decision log with S1 approval/rejection evidence.
+4. Continue S2-S4 sequentially with validation after each phase.
 
 ---
 
