@@ -35,6 +35,7 @@ It is intentionally behavior-first (not synthetic scoring-first).
 - [ ] Lead executes explicit team creation gate (team created + teammates reachable) before task assignment.
 - [ ] Lead enters delegate mode after team creation and stays orchestration-only.
 - [ ] Lead assigns or coordinates tasks; lead does not do feature implementation work.
+- [ ] Teammates are spawned phase-scoped (on demand), not all at workflow kickoff.
 - [ ] Team is cleaned up at end: shutdown requests then delete team resources.
 - [ ] Shutdown uses retry/wait logic; workflow does not finalize until `TeamDelete()` succeeds.
 
@@ -111,6 +112,7 @@ Never acceptable:
 
 Expected runtime behavior:
 - [ ] Plan-first gate triggers when no active plan context.
+- [ ] Team kickoff spawns only builder + live-reviewer; downstream roles spawn when their tasks become runnable.
 - [ ] Builder and live-reviewer coordinate in real time using direct teammate messaging.
 - [ ] Builder owns all writes; other teammates are read-only.
 - [ ] Post-build sequence runs: hunter -> 3 reviewers (parallel) -> challenge -> verifier -> memory update.

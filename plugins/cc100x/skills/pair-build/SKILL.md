@@ -45,6 +45,17 @@ Implement fresh from tests. Period.
 
 **File ownership:** ONLY the builder edits files. All other teammates are READ-ONLY.
 
+## Activation Strategy (Agent Teams-Native)
+
+Use phase-scoped activation to keep orchestration clear and avoid idle noise:
+
+1. Team kickoff: spawn `builder` + `live-reviewer` only.
+2. Spawn `hunter` only when hunter task becomes runnable.
+3. Spawn triad reviewers only when review tasks become runnable.
+4. Spawn `verifier` only when verifier task becomes runnable.
+
+Do not pre-spawn downstream teammates at kickoff.
+
 ---
 
 ## Plan-First Gate

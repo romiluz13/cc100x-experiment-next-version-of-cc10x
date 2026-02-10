@@ -2,7 +2,7 @@
 
 ### Next-Gen Orchestration on Agent Teams
 
-**Current version:** 0.1.2
+**Current version:** 0.1.5
 
 **Requires: Agent Teams enabled (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`)**
 
@@ -193,6 +193,29 @@ CC100x survives context compaction:
 ```
 
 **Iron Law:** Every workflow loads memory at START and persists at END (lead-owned Memory Update task by default).
+
+---
+
+## Quality Validation Harness (Phase D)
+
+CC100x now includes reproducible benchmark scaffolding for pre-prod promotion gates.
+
+```bash
+# Run static protocol checks
+npm run check:cc100x
+
+# Create a benchmark run scaffold
+npm run eval:run -- --candidate cc100x --profile deterministic
+
+# Score a filled run scaffold
+npm run eval:score -- --run-dir artifacts/eval/<run-id>/deterministic
+```
+
+Generated benchmark artifacts:
+- `artifacts/eval/<run-id>/<profile>/summary-input.json`
+- `artifacts/eval/<run-id>/<profile>/case-results.jsonl`
+- `artifacts/eval/<run-id>/<profile>/summary.json`
+- `artifacts/eval/<run-id>/<profile>/scorecard.json`
 
 ---
 
@@ -394,6 +417,6 @@ MIT License
 ---
 
 <p align="center">
-  <strong>cc100x v0.1.2</strong><br>
+  <strong>cc100x v0.1.5</strong><br>
   <em>Next-Gen Orchestration on Agent Teams</em>
 </p>

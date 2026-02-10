@@ -1,7 +1,7 @@
 # CC100x Protocol Manifest (Functional Canon)
 
 Status: canonical
-Last validated: 2026-02-09
+Last validated: 2026-02-10
 
 ## Source of Truth
 
@@ -42,6 +42,7 @@ Before execution/resume:
 - Team naming is deterministic.
 - Lead must switch to delegate mode after team creation.
 - `TEAM_CREATED` is an operational gate: `TeamCreate(...)` + teammate reachability via direct `SendMessage(...)` before any assignment.
+- Teammates are activated by phase (lazy spawn), not pre-spawned all at kickoff.
 - Default memory owner is lead (`MEMORY_OWNER: lead`).
 
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:47`
@@ -50,6 +51,7 @@ Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:61`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:67`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:73`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:76`
+Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:88`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:80`
 
 ## Task DAG and Completion Canon
@@ -150,6 +152,7 @@ Source: `plugins/cc100x/agents/builder.md:7`
 - Team shutdown must end with `TeamDelete()`.
 - If `TeamDelete()` fails, cleanup is retried and workflow remains open.
 - Idle/task status lag follows deterministic escalation (nudge -> status request -> reassignment).
+- Lead updates are state-change-driven (no repetitive idle heartbeat narration).
 
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:935`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:936`
@@ -160,6 +163,7 @@ Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:945`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:1032`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:1038`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:1124`
+Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:1020`
 
 ## Hooks and Self-Claim Policy Canon
 

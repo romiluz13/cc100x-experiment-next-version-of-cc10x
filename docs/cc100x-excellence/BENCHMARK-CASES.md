@@ -3,7 +3,7 @@
 ## Purpose
 Define the pre-production benchmark corpus used to compare CC100x against CC10x and validate quality gates from `KPI-SCORECARD.md`.
 
-Current state: this document defines the benchmark corpus and artifact conventions; benchmark runner scripts are planned but not yet implemented.
+Current state: this document defines the benchmark corpus and artifact conventions; benchmark runner scripts are implemented under `scripts/eval/`.
 
 ## Corpus Design Principles
 1. Cover the entire SDLC: PLAN, BUILD, REVIEW, DEBUG.

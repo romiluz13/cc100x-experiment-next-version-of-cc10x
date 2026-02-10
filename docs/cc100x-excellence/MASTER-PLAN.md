@@ -16,7 +16,7 @@ This plan is **compaction-safe** and should be treated as the single source of t
   - `plugins/cc100x/agents/*`
 - Phase A docs are complete (`KPI-SCORECARD`, `BENCHMARK-CASES`, `DECISION-LOG`).
 - Phase B/C runtime hardening is implemented for deterministic orchestration.
-- Phase D benchmark harness scripts are still planned (not yet present in `scripts/`).
+- Phase D benchmark harness scripts are implemented (`scripts/eval/run-benchmark.sh`, `scripts/eval/score-benchmark.sh`).
 
 ---
 
@@ -56,7 +56,7 @@ This plan is **compaction-safe** and should be treated as the single source of t
 
 ---
 
-## 5) Artifact Status (As Of 2026-02-09)
+## 5) Artifact Status (As Of 2026-02-10)
 ## Delete
 - `None`.
 
@@ -73,10 +73,14 @@ This plan is **compaction-safe** and should be treated as the single source of t
    - `plugins/cc100x/skills/pair-build/SKILL.md`
    - `plugins/cc100x/agents/*.md`
 
-## Planned (not yet implemented)
+## Newly implemented for Phase D foundation
 1. `scripts/eval/run-benchmark.sh`
 2. `scripts/eval/score-benchmark.sh`
-3. `package.json` benchmark script entries
+3. `scripts/lint-cc100x-protocol-integrity.sh`
+4. `package.json` entries:
+   - `eval:run`
+   - `eval:score`
+   - `check:protocol-integrity`
 
 ---
 
@@ -167,6 +171,7 @@ Files:
 Exit Criteria:
 - reproducible score reports
 - no critical regression vs CC10x baseline
+- decision log updated with benchmark evidence
 
 ## Phase E — Promotion Gate
 Deliver:
@@ -240,15 +245,14 @@ CC100x can be called best-in-class only if:
 ---
 
 ## 12) Next Action List (Immediate)
-1. Implement `scripts/eval/run-benchmark.sh` and `scripts/eval/score-benchmark.sh`.
-2. Add benchmark script entries in `package.json`.
-3. Execute deterministic benchmark corpus and persist artifacts.
-4. Update decision log with Phase D evidence and release recommendation.
-5. Reassess whether additional execution profiles are needed after deterministic benchmark results.
+1. Execute deterministic benchmark corpus and persist artifacts in `artifacts/eval/<run-id>/deterministic/`.
+2. Score run with `scripts/eval/score-benchmark.sh` and review hard-gate pass/fail.
+3. Update decision log with Phase D evidence and release recommendation.
+4. Reassess whether additional execution profiles are needed after deterministic benchmark results.
 
 ---
 
 ## 13) Compaction Resume Prompt
 If chat compacts, resume with:
 
-"Use `docs/cc100x-excellence/MASTER-PLAN.md` as the single source of truth. Phase A/B/C are complete for deterministic runtime; continue with Phase D by implementing benchmark scripts and collecting reproducible evidence."
+"Use `docs/cc100x-excellence/MASTER-PLAN.md` as the single source of truth. Phase A/B/C are complete and Phase D harness is implemented; execute deterministic benchmark runs, score them, and update the decision log with evidence."

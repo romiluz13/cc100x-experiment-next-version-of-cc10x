@@ -74,7 +74,7 @@ Before creating or resuming any workflow:
 
 1. Generate deterministic `team_name = cc100x-{workflow}-{YYYYMMDD-HHMMSS}`.
 2. Create the team with the lead as coordinator (`TeamCreate(...)`).
-3. Spawn required teammates for the selected workflow.
+3. Spawn only phase-required teammates for the selected workflow (lazy activation, not full pre-spawn).
 4. Verify team health before task assignment:
    - required teammate names exist
    - each teammate can receive a direct message (`SendMessage(type="message", ...)`)
@@ -84,6 +84,30 @@ Before creating or resuming any workflow:
 If any step fails:
 - Do NOT continue workflow execution.
 - Fix team creation/teammate spawn first or stop and report a blocking orchestration error.
+
+## Phase-Scoped Teammate Activation (MANDATORY)
+
+To reduce idle confusion, token waste, and premature findings, teammates are spawned by phase:
+
+- **BUILD**
+  - Team create: `builder`, `live-reviewer`
+  - When hunter task becomes runnable: spawn `hunter`
+  - When review tasks become runnable: spawn `security-reviewer`, `performance-reviewer`, `quality-reviewer`
+  - When verifier task becomes runnable: spawn `verifier`
+- **DEBUG**
+  - Team create: only required `investigator-*`
+  - After winning hypothesis / fix task runnable: spawn `builder`
+  - After fix-review tasks runnable: spawn 3 reviewers
+  - When verifier task becomes runnable: spawn `verifier`
+- **REVIEW**
+  - Team create: spawn 3 reviewers (phase-1 workers)
+- **PLAN**
+  - Team create: spawn `planner`
+
+Non-negotiable rules:
+1. Do NOT spawn downstream teammates early "just in case".
+2. Do NOT treat idle from not-yet-needed teammates as a stall.
+3. Spawn teammate only when at least one task for that role is runnable.
 
 ---
 
@@ -522,7 +546,8 @@ TaskUpdate({ taskId: memory_task_id, addBlockedBy: [planner_task_id] })
 3. **Clarify requirements** (DO NOT SKIP) → Use AskUserQuestion
 4. **Create Agent Team (MANDATORY gate)**:
    - `TeamCreate(...)` with deterministic team name
-   - spawn builder, live-reviewer, hunter, security-reviewer, performance-reviewer, quality-reviewer, verifier
+   - spawn `builder` + `live-reviewer` only
+   - defer `hunter` / triad reviewers / `verifier` until their tasks are runnable
    - verify teammate reachability via direct message
    - enter delegate mode (`Shift+Tab`)
    - run `TaskList()` to confirm team-scoped task context
@@ -563,7 +588,8 @@ TaskUpdate({ taskId: memory_task_id, addBlockedBy: [planner_task_id] })
 4. **Generate hypotheses** (3-5 based on error/symptoms + memory)
 5. **Create Agent Team (MANDATORY gate)**:
    - `TeamCreate(...)` with deterministic team name
-   - spawn required investigators + builder + reviewers + verifier
+   - spawn required investigators only
+   - defer `builder` / review triad / `verifier` until their tasks are runnable
    - verify teammate reachability via direct message
    - enter delegate mode (`Shift+Tab`)
    - run `TaskList()` to confirm team-scoped task context
@@ -940,6 +966,10 @@ If any required task or blocker is missing:
    - Classify task owner:
      - **Lead-owned tasks** (`... Challenge round`, `CC100X Memory Update`) run in lead context
      - **Teammate tasks** are assigned via message with task context (see Agent Invocation Template)
+   - If assigned teammate is not yet active in team:
+     - spawn teammate now
+     - verify reachability via direct message
+     - only then assign task
    - If multiple teammate tasks are ready → assign to multiple teammates simultaneously
 
 3. After teammate completes:
@@ -983,8 +1013,24 @@ Teammates sometimes idle between turns or lag task updates. Use deterministic es
 
 Notes:
 - Idle is normal when a task is blocked by dependencies; do not escalate if blockedBy is unresolved.
+- Idle from non-spawned or not-yet-needed roles is expected; do not treat as failure.
 - Never keep workflow in ambiguous idle state beyond escalation ladder.
 - Record reassignment decisions in Memory Notes.
+
+## Lead Communication Discipline (MANDATORY)
+
+Lead updates must be state-change-driven, not heartbeat spam.
+
+Send user updates when:
+1. A phase starts or completes.
+2. A blocker is detected with concrete evidence.
+3. A remediation path is created/resolved.
+4. Final verifier/memory/shutdown gates complete.
+
+Avoid:
+- Repeating "X is idle" messages without new action.
+- Asking user to choose options while escalation ladder is still in progress.
+- Long progress narration when no state changed.
 
 ---
 

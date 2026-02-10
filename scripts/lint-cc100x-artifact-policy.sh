@@ -33,4 +33,18 @@ for agent in \
   require_pattern "$file" "Do NOT create standalone report files" "$agent must forbid standalone report files"
 done
 
+for agent in investigator verifier; do
+  file="$repo/plugins/cc100x/agents/$agent.md"
+  [[ -f "$file" ]] || { echo "FAIL: Missing agent file $file" >&2; exit 1; }
+  require_pattern "$file" "^## Shell Safety \\(MANDATORY\\)" "$agent must define Shell Safety section"
+  require_pattern "$file" "Do NOT create standalone .*report files" "$agent must forbid standalone report files"
+done
+
+for agent in builder planner; do
+  file="$repo/plugins/cc100x/agents/$agent.md"
+  [[ -f "$file" ]] || { echo "FAIL: Missing agent file $file" >&2; exit 1; }
+  require_pattern "$file" "^## Write Policy \\(MANDATORY\\)" "$agent must define Write Policy section"
+  require_pattern "$file" "Do NOT generate ad-hoc report artifacts" "$agent must forbid ad-hoc report artifacts"
+done
+
 echo "OK: CC100x artifact governance policy is present."

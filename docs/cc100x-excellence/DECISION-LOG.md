@@ -95,10 +95,25 @@ No major orchestration change should be considered final without a decision entr
 - **Evidence:** Program invariants in `MASTER-PLAN.md`.
 - **Follow-ups:** Ensure all upcoming designs keep hook dependency optional.
 
+## DEC-20260210-001
+- **Status:** APPROVED
+- **Date:** 2026-02-10
+- **Phase:** D
+- **Title:** Implement deterministic benchmark harness and protocol-integrity lint
+- **Owner:** @rom.iluz
+- **Scope:** `scripts/eval/*`, `scripts/lint-cc100x-protocol-integrity.sh`, `package.json`, excellence docs
+- **Context:** Phase D required reproducible scoring artifacts and stronger protocol regression checks before prod merge.
+- **Decision:** Implement benchmark scaffold and score scripts, add protocol-integrity lint, and wire all checks under `npm run check:cc100x`.
+- **Alternatives Considered:** Manual retrospective-only validation; rejected because it is hard to reproduce and compare across runs.
+- **Risk Assessment:** Low
+- **Rollback Plan:** Remove added scripts and script entries; retain existing runtime orchestration unchanged.
+- **Evidence:** `scripts/eval/run-benchmark.sh`, `scripts/eval/score-benchmark.sh`, `scripts/lint-cc100x-protocol-integrity.sh`, `package.json`.
+- **Follow-ups:** Execute deterministic benchmark runs, produce `summary.json` and `scorecard.json`, then complete Phase D gate evidence.
+
 ## Pending Decisions
 1. DEC-Phase-B profile semantics finalization (`deterministic/adaptive/turbo-quality`).
 2. DEC-Phase-C Router Contract v2 field set and strictness strategy.
-3. DEC-Phase-D KPI threshold lock after first benchmark run.
+3. DEC-Phase-D KPI threshold lock after first benchmark run execution.
 4. DEC-Phase-E production release decision.
 
 ## Decision Hygiene Checklist

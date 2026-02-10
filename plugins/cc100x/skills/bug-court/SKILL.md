@@ -40,6 +40,17 @@ If you haven't completed Phase 1, you cannot propose fixes.
 
 Number of investigators = number of plausible hypotheses (typically 2-5).
 
+## Activation Strategy (Agent Teams-Native)
+
+Use phase-scoped activation for cleaner debugging flow:
+
+1. Team kickoff: spawn only `investigator-*` roles for current hypotheses.
+2. Spawn `builder` only after debate verdict confirms root cause.
+3. Spawn review triad only after fix task is runnable.
+4. Spawn `verifier` only after challenge round task is runnable.
+
+Do not pre-spawn downstream roles before their phase.
+
 ---
 
 ## Protocol Phases

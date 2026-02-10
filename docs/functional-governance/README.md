@@ -26,6 +26,9 @@ Run:
 
 ```bash
 npm run check:functional-bible
+npm run check:protocol-integrity
+npm run check:artifact-policy
 ```
 
 This validates that bible citations point only to functional files and that cited files/lines exist.
+It also validates that lead protocol gates and artifact-governance constraints remain intact.

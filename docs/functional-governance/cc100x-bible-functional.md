@@ -52,6 +52,7 @@ Before team execution or resume:
 - Team naming is deterministic.
 - Lead enters delegate mode before assignment.
 - `TEAM_CREATED` is an operational gate (not narrative): team exists, required teammates are spawned, direct messaging is reachable.
+- Teammates are spawned by phase (lazy activation), not all at workflow kickoff.
 - Teammate prompts declare default memory owner as lead.
 
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:47`
@@ -60,6 +61,7 @@ Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:61`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:67`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:73`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:76`
+Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:88`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:786`
 
 ## 4) Task Graph and Memory-Update Closure
@@ -158,6 +160,7 @@ Operational constraints are explicit:
 - Shutdown requires approval flow and team deletion.
 - Failed `TeamDelete()` is retried; workflow is not finalized until cleanup succeeds.
 - Idle/task-lag handling is deterministic (nudge -> status request -> reassignment ladder).
+- Lead communication is state-change-driven (avoid repeated idle narration without new action).
 
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:935`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:936`
@@ -168,6 +171,7 @@ Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:945`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:1032`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:1038`
 Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:1124`
+Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:1020`
 
 ## 10) Hooks and Self-Claim Policy
 

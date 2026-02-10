@@ -65,9 +65,9 @@ Total: `1.00`
 
 ## Required Scorecard Outputs
 Each benchmark run must produce:
-1. `artifacts/eval/<timestamp>/summary.json`
-2. `artifacts/eval/<timestamp>/scorecard.json`
-3. `artifacts/eval/<timestamp>/case-results.jsonl`
+1. `artifacts/eval/<timestamp>/<profile>/summary.json`
+2. `artifacts/eval/<timestamp>/<profile>/scorecard.json`
+3. `artifacts/eval/<timestamp>/<profile>/case-results.jsonl`
 
 Minimum `scorecard.json` shape:
 
