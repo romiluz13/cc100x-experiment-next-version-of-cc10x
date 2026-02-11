@@ -230,6 +230,21 @@ No major orchestration change should be considered final without a decision entr
 - **Evidence:** Lead protocol + runbook S19 + lint enforcement + successful `npm run check:cc100x`.
 - **Follow-ups:** Validate S19 in final live matrix and include outcome in Phase E verdict.
 
+## DEC-20260211-006
+- **Status:** HOLD
+- **Date:** 2026-02-11
+- **Phase:** E
+- **Title:** Open explicit production verdict tracker and block premature release decision
+- **Owner:** @rom.iluz
+- **Scope:** `docs/cc100x-excellence/PHASE-E-VERDICT.md`
+- **Context:** Need one canonical source for final release decision while preventing subjective early merge claims.
+- **Decision:** Add a dedicated Phase E verdict tracker with PR1-PR5 status table, mandatory live matrix list, and explicit decision rule. Keep verdict `PENDING FINAL LIVE MATRIX` until required scenarios are validated.
+- **Alternatives Considered:** Record direct `READY NOW`/`NOT READY` in decision log immediately; rejected because required final scenarios are not yet fully evidenced in this repo.
+- **Risk Assessment:** Low
+- **Rollback Plan:** Remove verdict tracker file and revert to decision-log-only promotion notes.
+- **Evidence:** `docs/cc100x-excellence/PHASE-E-VERDICT.md`
+- **Follow-ups:** Run final live matrix (S07/S08/S09/S13/S18/S19), then update Phase E verdict and mark release decision as APPROVED.
+
 ## Pending Decisions
 1. DEC-Phase-B profile semantics finalization (`deterministic/adaptive/turbo-quality`).
 2. DEC-Phase-C Router Contract v2 field set and strictness strategy.
