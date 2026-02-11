@@ -225,8 +225,10 @@ Generated benchmark artifacts:
 
 ```bash
 /plugin marketplace add romiluz13/cc100x-experiment-next-version-of-cc10x
-/plugin install cc100x-experiment-next-version-of-cc10x@romiluz13
+/plugin install cc100x@romiluz13
 ```
+
+`/plugin install` uses the plugin package name (`name` in `plugin.json`), not the repository slug.
 
 ### Step 2: Enable Agent Teams
 
