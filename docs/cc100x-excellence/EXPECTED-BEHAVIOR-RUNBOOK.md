@@ -65,6 +65,7 @@ It is intentionally behavior-first (not synthetic scoring-first).
 - [ ] BUILD depth selection is deterministic (`QUICK` vs `FULL`) and defaults to `FULL` unless all quick-safety conditions pass.
 - [ ] QUICK mode never bypasses Router Contract validation, verifier evidence, or memory update.
 - [ ] QUICK mode auto-escalates to FULL chain on any blocking/remediation signal.
+- [ ] Only outputs from runnable/in-progress tasks can drive gate changes; pre-runnable teammate findings are advisory until task is runnable.
 
 ### Router Contract enforcement
 - [ ] Every teammate output ends with `### Router Contract (MACHINE-READABLE)` YAML.
@@ -217,6 +218,7 @@ Never acceptable:
 - [ ] Lead does not claim "working" without fresh evidence from current turn.
 - [ ] Lead labels idle state explicitly (`idle-blocked` vs `idle-unresponsive`), not vague idle spam.
 - [ ] Repeated unresponsive path escalates to `stalled`/`CRITICAL` with explicit user decision before unsafe continuation.
+- [ ] Premature findings from non-runnable teammates do not trigger remediation by default.
 
 ---
 
@@ -309,6 +311,13 @@ Use one real task per scenario. Mark each check `V` or `X`.
   - [ ] QUICK starts if eligible.
   - [ ] Blocking/remediation signal forces escalation to FULL.
   - [ ] FULL chain (hunter + triad + challenge + verifier) executes before completion.
+
+## S18 - Premature finding from non-runnable teammate
+- Prompt example: "BUILD run where verifier/reviewer sends findings before their task is runnable."
+- Expected:
+  - [ ] Lead classifies message as advisory pre-check (not gate-driving evidence).
+  - [ ] Lead does not open `REM-FIX` / `REM-EVIDENCE` from this signal alone.
+  - [ ] Lead acts on findings only when the corresponding task becomes runnable/in-progress.
 
 ## S06 - BUILD verifier evidence
 - Expected:

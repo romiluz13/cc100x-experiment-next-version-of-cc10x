@@ -109,6 +109,18 @@ Non-negotiable rules:
 2. Do NOT treat idle from not-yet-needed teammates as a stall.
 3. Spawn teammate only when at least one task for that role is runnable.
 
+### Runnable Evidence Gate (MANDATORY)
+
+Only outputs tied to the currently runnable/in-progress task may drive gate transitions.
+
+Rules:
+1. If a teammate with no runnable/in-progress task sends findings, classify as advisory pre-check only.
+2. Advisory pre-checks must NOT create `REM-FIX` / `REM-EVIDENCE` or unblock/block downstream gates by themselves.
+3. Acknowledge advisory pre-checks and explicitly defer action until the teammate's task is runnable.
+4. Exception: immediate safety-critical risk (for example, destructive command recommendation or secret exposure) may open a protective remediation task.
+
+This prevents premature verifier/reviewer messages from hijacking workflow order.
+
 ---
 
 ## Memory Protocol (PERMISSION-FREE)

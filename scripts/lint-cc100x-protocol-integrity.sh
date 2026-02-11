@@ -65,6 +65,7 @@ require_pattern "^#### Severity Escalation Model \(MANDATORY\)" "Lead must defin
 require_pattern "^## Session Handoff Payload \(MANDATORY\)" "Lead must define session handoff payload schema"
 require_pattern "^## Resume Checklist \(MANDATORY\)" "Lead must define resume checklist"
 require_pattern "^## Execution Depth Selector \(MANDATORY\)" "Lead must define deterministic execution depth selector"
+require_pattern "^### Runnable Evidence Gate \(MANDATORY\)" "Lead must define runnable evidence gate"
 
 # Team shutdown requirements
 require_pattern "shutdown_request" "Lead must require shutdown_request messages"
@@ -97,6 +98,7 @@ require_pattern "TaskList wins" "Resume conflict resolution must prefer TaskList
 require_pattern "Quick path eligibility" "Lead must define quick path eligibility rules"
 require_pattern "quick path still requires Router Contracts, verifier evidence, and memory update" "Quick path must preserve core quality gates"
 require_pattern "if QUICK path emits blocking/remediation -> escalate to FULL immediately" "Quick path must auto-escalate to full on blocking findings"
+require_pattern 'Advisory pre-checks must NOT create `REM-FIX` / `REM-EVIDENCE`' "Lead must prevent non-runnable advisory findings from opening remediation by default"
 
 # Build structural blockers (no verifier shortcut)
 require_pattern "challenge blocked by all 3 reviewers" "Lead must enforce challenge blocked by all reviewers"
@@ -107,8 +109,10 @@ require_pattern 'defer `hunter` / triad / `verifier` until runnable' "BUILD must
 require_pattern_file "Depth is selected before task creation" "$runbook" "Runbook must define depth selection before BUILD task creation"
 require_pattern_file "S16 - BUILD quick-path bounded change" "$runbook" "Runbook must include quick-path validation scenario"
 require_pattern_file "S17 - BUILD quick-path forced escalation" "$runbook" "Runbook must include quick-path escalation scenario"
+require_pattern_file "S18 - Premature finding from non-runnable teammate" "$runbook" "Runbook must include premature finding containment scenario"
 require_pattern_file "^## 11\\. Harmony Report \\(Completeness Gate\\)" "$runbook" "Runbook must include Harmony Report completeness gate"
 require_pattern_file "Required Pass Criteria" "$runbook" "Runbook must include explicit Harmony pass criteria"
+require_pattern_file "pre-runnable teammate findings are advisory" "$runbook" "Runbook must require advisory handling for non-runnable teammate findings"
 
 # Required gates presence
 for gate in \

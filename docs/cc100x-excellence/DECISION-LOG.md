@@ -200,6 +200,21 @@ No major orchestration change should be considered final without a decision entr
 - **Evidence:** S4 runbook/lint updates and successful `npm run check:cc100x`.
 - **Follow-ups:** Execute final live validation matrix and record explicit Phase E release verdict.
 
+## DEC-20260211-004
+- **Status:** APPROVED
+- **Date:** 2026-02-11
+- **Phase:** B
+- **Title:** Add runnable-evidence gate to prevent premature remediation from non-runnable teammate output
+- **Owner:** @rom.iluz
+- **Scope:** `plugins/cc100x/skills/cc100x-lead/SKILL.md`, `docs/cc100x-excellence/EXPECTED-BEHAVIOR-RUNBOOK.md`, `scripts/lint-cc100x-protocol-integrity.sh`
+- **Context:** Live runs can emit early verifier/reviewer findings before their tasks are runnable, causing noisy or out-of-order remediation paths.
+- **Decision:** Only runnable/in-progress task outputs may drive gate transitions. Non-runnable teammate findings are advisory pre-checks and cannot open remediation by default (except immediate safety-critical risks).
+- **Alternatives Considered:** Keep current behavior and rely on lead judgment per run; rejected due to recurring false starts and orchestration drift risk.
+- **Risk Assessment:** Low
+- **Rollback Plan:** Remove runnable-evidence gate section and associated runbook/lint checks.
+- **Evidence:** Lead protocol update + runbook S18 scenario + lint enforcement + successful `npm run check:cc100x`.
+- **Follow-ups:** Validate S18 in live run and include result in final Phase E verdict.
+
 ## Pending Decisions
 1. DEC-Phase-B profile semantics finalization (`deterministic/adaptive/turbo-quality`).
 2. DEC-Phase-C Router Contract v2 field set and strictness strategy.
