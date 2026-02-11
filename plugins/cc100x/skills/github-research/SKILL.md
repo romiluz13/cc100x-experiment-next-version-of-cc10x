@@ -417,11 +417,11 @@ Read(file_path=".claude/cc100x/patterns.md")
 - One-time findings not applicable to future work
 - Raw code snippets without context
 
-### Step 4: Commit Research (Optional but Recommended)
+### Step 4: Commit Research (User-Directed Only)
 
 ```
-Bash(command="git add docs/research/*.md")
-Bash(command="git commit -m 'docs: add <topic> research'")
+# Do NOT auto-commit from this skill by default.
+# Commit only if the user explicitly asks to commit research artifacts.
 ```
 
 ## Red Flags - Research NOT Complete
