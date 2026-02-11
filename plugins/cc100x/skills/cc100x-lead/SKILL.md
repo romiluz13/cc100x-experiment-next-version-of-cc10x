@@ -72,7 +72,7 @@ Before creating or resuming any workflow:
 
 `TEAM_CREATED` is not a narrative statement. It requires operational evidence.
 
-1. Generate deterministic `team_name = cc100x-{workflow}-{YYYYMMDD-HHMMSS}`.
+1. Generate deterministic project-scoped `team_name = cc100x-{project_key}-{workflow}-{YYYYMMDD-HHMMSS}` where `project_key` is derived from current repo folder name (lowercase, safe chars only).
 2. Create the team with the lead as coordinator (`TeamCreate(...)`).
 3. Spawn only phase-required teammates for the selected workflow (lazy activation, not full pre-spawn).
 4. Verify team health before task assignment:
@@ -84,6 +84,11 @@ Before creating or resuming any workflow:
 If any step fails:
 - Do NOT continue workflow execution.
 - Fix team creation/teammate spawn first or stop and report a blocking orchestration error.
+
+Project-scope stale-team rule:
+1. During preflight, clean/close stale teams only when team name matches current `project_key`.
+2. Do NOT auto-clean foreign project teams.
+3. If foreign teams are detected, log them as non-blocking context only.
 
 ## Phase-Scoped Teammate Activation (MANDATORY)
 
@@ -1449,7 +1454,7 @@ Task claiming is lock-safe in Agent Teams (file-lock protected), so simultaneous
 
 ## Gates (Must Pass)
 
-1. **AGENT_TEAMS_READY** - Agent Teams enabled; no stale active team in session
+1. **AGENT_TEAMS_READY** - Agent Teams enabled; no stale active team for current `project_key`
 2. **MEMORY_LOADED** - Before routing
 3. **TASKS_CHECKED** - Check TaskList() for active workflow
 4. **INTENT_CLARIFIED** - User intent is unambiguous (all workflows)
@@ -1478,8 +1483,8 @@ After workflow completes AND memory is updated:
 
 **Do not finalize early:** Never report workflow as complete while teammates are still active or team resources still exist.
 
-**Team Naming Convention:** `cc100x-{workflow}-{YYYYMMDD-HHMMSS}`
-Example: `cc100x-build-20260206-143022`, `cc100x-debug-20260206-150000`
+**Team Naming Convention:** `cc100x-{project_key}-{workflow}-{YYYYMMDD-HHMMSS}`
+Example: `cc100x-cc100x-test-app-build-20260206-143022`, `cc100x-sales-engineer-debug-20260206-150000`
 
 ---
 

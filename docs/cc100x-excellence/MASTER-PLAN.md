@@ -248,7 +248,7 @@ CC100x can be called best-in-class only if:
 
 ## 12) Next Action List (Immediate)
 1. Execute final live validation matrix using `EXPECTED-BEHAVIOR-RUNBOOK.md` + Harmony Report.
-   - Include `S18` (premature non-runnable teammate finding containment) in the final run.
+   - Include `S18` (premature non-runnable teammate finding containment) and `S19` (cross-project stale team isolation) in the final run.
 2. Run `npm run check:cc100x` and verify no protocol regressions.
 3. Record explicit Phase E production verdict in decision log (`READY NOW` / `READY WITH DECLARED LIMITS` / `NOT READY`).
 4. If not `READY NOW`, open only targeted remediation tasks (no architecture expansion).

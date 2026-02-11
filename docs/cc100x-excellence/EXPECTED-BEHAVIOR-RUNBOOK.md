@@ -36,6 +36,8 @@ It is intentionally behavior-first (not synthetic scoring-first).
 - [ ] Lead enters delegate mode after team creation and stays orchestration-only.
 - [ ] Lead assigns or coordinates tasks; lead does not do feature implementation work.
 - [ ] Teammates are spawned phase-scoped (on demand), not all at workflow kickoff.
+- [ ] Team naming is project-scoped: `cc100x-{project_key}-{workflow}-{timestamp}`.
+- [ ] Preflight stale-team cleanup is project-scoped; foreign-project teams are logged but not auto-cleaned.
 - [ ] Lead emits a structured handoff payload before pause/interruptible boundaries (not a vague narrative update).
 - [ ] Team is cleaned up at end: shutdown requests then delete team resources.
 - [ ] Shutdown uses retry/wait logic; workflow does not finalize until `TeamDelete()` succeeds.
@@ -318,6 +320,13 @@ Use one real task per scenario. Mark each check `V` or `X`.
   - [ ] Lead classifies message as advisory pre-check (not gate-driving evidence).
   - [ ] Lead does not open `REM-FIX` / `REM-EVIDENCE` from this signal alone.
   - [ ] Lead acts on findings only when the corresponding task becomes runnable/in-progress.
+
+## S19 - Cross-project stale team isolation
+- Prompt example: "Session has stale teams from another repo and current repo starts a new workflow."
+- Expected:
+  - [ ] Lead creates current team with project-scoped team name.
+  - [ ] Lead cleans only stale teams for current `project_key`.
+  - [ ] Foreign-project stale teams do not block current workflow.
 
 ## S06 - BUILD verifier evidence
 - Expected:

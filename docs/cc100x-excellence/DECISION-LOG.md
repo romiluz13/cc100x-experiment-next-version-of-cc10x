@@ -215,6 +215,21 @@ No major orchestration change should be considered final without a decision entr
 - **Evidence:** Lead protocol update + runbook S18 scenario + lint enforcement + successful `npm run check:cc100x`.
 - **Follow-ups:** Validate S18 in live run and include result in final Phase E verdict.
 
+## DEC-20260211-005
+- **Status:** APPROVED
+- **Date:** 2026-02-11
+- **Phase:** B
+- **Title:** Enforce project-scoped team naming and stale-team isolation
+- **Owner:** @rom.iluz
+- **Scope:** `plugins/cc100x/skills/cc100x-lead/SKILL.md`, `docs/cc100x-excellence/EXPECTED-BEHAVIOR-RUNBOOK.md`, `scripts/lint-cc100x-protocol-integrity.sh`
+- **Context:** Cross-project stale teams can create confusion in live runs if naming/cleanup boundaries are not explicit.
+- **Decision:** Require project-scoped team names (`cc100x-{project_key}-{workflow}-{timestamp}`) and restrict stale-team cleanup to current project scope only.
+- **Alternatives Considered:** Keep workflow-only team names and global cleanup assumptions; rejected due to stale/foreign team ambiguity risk.
+- **Risk Assessment:** Low
+- **Rollback Plan:** Revert team naming and stale-team scope rules in lead/runbook/lint.
+- **Evidence:** Lead protocol + runbook S19 + lint enforcement + successful `npm run check:cc100x`.
+- **Follow-ups:** Validate S19 in final live matrix and include outcome in Phase E verdict.
+
 ## Pending Decisions
 1. DEC-Phase-B profile semantics finalization (`deterministic/adaptive/turbo-quality`).
 2. DEC-Phase-C Router Contract v2 field set and strictness strategy.

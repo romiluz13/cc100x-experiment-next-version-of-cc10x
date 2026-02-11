@@ -66,6 +66,8 @@ require_pattern "^## Session Handoff Payload \(MANDATORY\)" "Lead must define se
 require_pattern "^## Resume Checklist \(MANDATORY\)" "Lead must define resume checklist"
 require_pattern "^## Execution Depth Selector \(MANDATORY\)" "Lead must define deterministic execution depth selector"
 require_pattern "^### Runnable Evidence Gate \(MANDATORY\)" "Lead must define runnable evidence gate"
+require_pattern "team_name = cc100x-\\{project_key\\}-\\{workflow\\}-\\{YYYYMMDD-HHMMSS\\}" "Lead must define project-scoped team naming format"
+require_pattern "Do NOT auto-clean foreign project teams" "Lead must forbid auto-cleanup of foreign-project teams"
 
 # Team shutdown requirements
 require_pattern "shutdown_request" "Lead must require shutdown_request messages"
@@ -110,9 +112,11 @@ require_pattern_file "Depth is selected before task creation" "$runbook" "Runboo
 require_pattern_file "S16 - BUILD quick-path bounded change" "$runbook" "Runbook must include quick-path validation scenario"
 require_pattern_file "S17 - BUILD quick-path forced escalation" "$runbook" "Runbook must include quick-path escalation scenario"
 require_pattern_file "S18 - Premature finding from non-runnable teammate" "$runbook" "Runbook must include premature finding containment scenario"
+require_pattern_file "S19 - Cross-project stale team isolation" "$runbook" "Runbook must include cross-project stale team isolation scenario"
 require_pattern_file "^## 11\\. Harmony Report \\(Completeness Gate\\)" "$runbook" "Runbook must include Harmony Report completeness gate"
 require_pattern_file "Required Pass Criteria" "$runbook" "Runbook must include explicit Harmony pass criteria"
 require_pattern_file "pre-runnable teammate findings are advisory" "$runbook" "Runbook must require advisory handling for non-runnable teammate findings"
+require_pattern_file 'project-scoped: `cc100x-\{project_key\}-\{workflow\}-\{timestamp\}`' "$runbook" "Runbook must require project-scoped team naming"
 
 # Required gates presence
 for gate in \
