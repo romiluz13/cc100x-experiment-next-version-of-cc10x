@@ -20,6 +20,31 @@ require_pattern "$lead" "^## Artifact Governance \\(MANDATORY\\)" "Lead skill mu
 require_pattern "$lead" "Forbidden by default:" "Lead skill must define forbidden artifact behavior"
 require_pattern "$lead" "CC100X REM-EVIDENCE: unauthorized artifact claim" "Lead skill must enforce REM-EVIDENCE on unauthorized artifacts"
 require_pattern "$lead" "approved durable artifact paths|Approved durable artifact paths" "Lead skill must define approved durable paths"
+require_pattern "$lead" "contract\\.CLAIMED_ARTIFACTS" "Lead skill must use CLAIMED_ARTIFACTS for artifact validation"
+require_pattern "$lead" "EVIDENCE_COMMANDS" "Lead skill must define command-evidence validation"
+
+router_contract="$repo/plugins/cc100x/skills/router-contract/SKILL.md"
+[[ -f "$router_contract" ]] || { echo "FAIL: Missing router-contract skill file" >&2; exit 1; }
+require_pattern "$router_contract" "CONTRACT_VERSION" "Router Contract skill must define CONTRACT_VERSION"
+require_pattern "$router_contract" "CLAIMED_ARTIFACTS" "Router Contract skill must define CLAIMED_ARTIFACTS"
+require_pattern "$router_contract" "EVIDENCE_COMMANDS" "Router Contract skill must define EVIDENCE_COMMANDS"
+
+for agent in \
+  builder \
+  planner \
+  live-reviewer \
+  hunter \
+  investigator \
+  verifier \
+  security-reviewer \
+  performance-reviewer \
+  quality-reviewer; do
+  file="$repo/plugins/cc100x/agents/$agent.md"
+  [[ -f "$file" ]] || { echo "FAIL: Missing agent file $file" >&2; exit 1; }
+  require_pattern "$file" "CONTRACT_VERSION: \"2\\.3\"" "$agent must emit Router Contract schema version"
+  require_pattern "$file" "CLAIMED_ARTIFACTS:" "$agent must emit CLAIMED_ARTIFACTS in Router Contract"
+  require_pattern "$file" "EVIDENCE_COMMANDS:" "$agent must emit EVIDENCE_COMMANDS in Router Contract"
+done
 
 for agent in \
   live-reviewer \
@@ -28,7 +53,6 @@ for agent in \
   performance-reviewer \
   quality-reviewer; do
   file="$repo/plugins/cc100x/agents/$agent.md"
-  [[ -f "$file" ]] || { echo "FAIL: Missing agent file $file" >&2; exit 1; }
   require_pattern "$file" "^## Artifact Discipline \\(MANDATORY\\)" "$agent must define Artifact Discipline section"
   require_pattern "$file" "Do NOT create standalone report files" "$agent must forbid standalone report files"
 done

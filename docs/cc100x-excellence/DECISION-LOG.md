@@ -260,6 +260,21 @@ No major orchestration change should be considered final without a decision entr
 - **Evidence:** Production publication event + passing protocol checks (`npm run check:cc100x`) + updated Phase E verdict file.
 - **Follow-ups:** Keep improvements targeted, reversible, and evidence-backed; no broad architecture churn.
 
+## DEC-20260211-008
+- **Status:** APPROVED
+- **Date:** 2026-02-11
+- **Phase:** B
+- **Title:** Harden Router Contract evidence integrity (`CONTRACT_VERSION`, `CLAIMED_ARTIFACTS`, `EVIDENCE_COMMANDS`)
+- **Owner:** @rom.iluz
+- **Scope:** `plugins/cc100x/skills/router-contract/SKILL.md`, `plugins/cc100x/skills/cc100x-lead/SKILL.md`, `plugins/cc100x/agents/*.md`, `scripts/lint-cc100x-artifact-policy.sh`, `docs/cc100x-excellence/EXPECTED-BEHAVIOR-RUNBOOK.md`, `docs/functional-governance/protocol-manifest.md`
+- **Context:** Live production usage showed risk of teammate narrative claims drifting from actual artifacts/evidence. Existing artifact policy was strong but not fully contract-explicit.
+- **Decision:** Make artifact/evidence assertions first-class Router Contract fields and enforce lead-side validation + lint checks across all agents.
+- **Alternatives Considered:** Keep narrative scanning only; rejected due to ambiguity and potential false completion claims.
+- **Risk Assessment:** Low
+- **Rollback Plan:** Revert lint enforcement first; if needed, downgrade new fields to advisory while keeping old validation path active.
+- **Evidence:** Updated runtime prompts/skills + runbook/protocol docs + successful `npm run check:cc100x`.
+- **Follow-ups:** Validate in live BUILD/DEBUG runs that missing/mismatched claims reliably route to `CC100X REM-EVIDENCE`.
+
 ## Pending Decisions
 1. DEC-Phase-B profile semantics finalization (`deterministic/adaptive/turbo-quality`).
 2. DEC-Phase-C Router Contract v2 field set and strictness strategy.

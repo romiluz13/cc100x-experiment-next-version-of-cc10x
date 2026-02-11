@@ -1,7 +1,7 @@
 # CC100x Protocol Manifest (Functional Canon)
 
 Status: canonical
-Last validated: 2026-02-10
+Last validated: 2026-02-11
 
 ## Source of Truth
 
@@ -78,6 +78,7 @@ Source: `plugins/cc100x/skills/cc100x-lead/SKILL.md:1026`
 ## Router Contract and Remediation Canon
 
 - Lead validates every teammate via Router Contract before task completion.
+- Router Contracts use schema versioning (`CONTRACT_VERSION`) and include artifact/evidence fields (`CLAIMED_ARTIFACTS`, `EVIDENCE_COMMANDS`).
 - Blocking/remediation fields create remediation pathing.
 - Remediation naming is canonicalized to `CC100X REM-FIX:` (legacy `CC100X REMEDIATION:` is compatibility-only).
 - Circuit breaker applies before repeated REM-FIX loops.

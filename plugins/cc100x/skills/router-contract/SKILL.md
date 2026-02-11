@@ -24,6 +24,7 @@ Every teammate MUST include this section at the end of their output:
 ````markdown
 ### Router Contract (MACHINE-READABLE)
 ```yaml
+CONTRACT_VERSION: "2.3"
 STATUS: [value from agent-specific list below]
 CONFIDENCE: [0-100]
 CRITICAL_ISSUES: [count]
@@ -35,6 +36,8 @@ SPEC_COMPLIANCE: [PASS|FAIL|N/A]
 TIMESTAMP: [ISO 8601 timestamp]
 AGENT_ID: [teammate name, e.g., "investigator-1"]
 FILES_MODIFIED: [list of files changed, or empty]
+CLAIMED_ARTIFACTS: [durable files claimed as created/updated by this teammate, or empty]
+EVIDENCE_COMMANDS: ["command => exit <code>", "..."]
 DEVIATIONS_FROM_PLAN: [null or description of what changed from plan]
 MEMORY_NOTES:
   learnings: ["insight 1", "insight 2"]
@@ -62,6 +65,9 @@ MEMORY_NOTES:
 ---
 
 ## Field Definitions
+
+### CONTRACT_VERSION
+Contract schema version emitted by teammate. Current target is `2.3`.
 
 ### STATUS
 Agent's self-reported completion status. See table above for valid values per agent.
@@ -112,6 +118,17 @@ The teammate's name (e.g., "investigator-1", "security-reviewer"). Critical for 
 ### FILES_MODIFIED
 List of files changed by WRITE agents (builder, planner). Empty for READ-ONLY agents (including investigator). Used by lead to detect file conflicts.
 
+### CLAIMED_ARTIFACTS
+Durable output files the teammate explicitly claims to have created/updated.
+- MUST be empty (`[]`) for read-only teammates.
+- MUST only include approved durable paths (`docs/plans/`, `docs/research/`, `docs/reviews/` when explicitly requested).
+- If teammate output claims created/saved files but this field is missing or mismatched, lead treats as evidence non-compliance.
+
+### EVIDENCE_COMMANDS
+List of verification/diagnostic commands with exit codes proving claims in this contract.
+- Example: `["npm test -- tests/auth.test.ts => exit 0", "npm run build => exit 0"]`
+- Use `[]` only when no command evidence is applicable to the role.
+
 ### DEVIATIONS_FROM_PLAN
 Description of any changes made that differ from the original plan. Null if implementation matches plan exactly. Critical for maintaining plan-implementation alignment.
 
@@ -145,6 +162,8 @@ STATUS: PASS | FAIL
 TDD_RED_EXIT: [1 if red phase ran, null if missing]
 TDD_GREEN_EXIT: [0 if green phase ran, null if missing]
 FILES_MODIFIED: ["src/auth/middleware.ts", "src/auth/middleware.test.ts"]
+CLAIMED_ARTIFACTS: []
+EVIDENCE_COMMANDS: ["npm test path/to/test.test.ts => exit 1", "npm test path/to/test.test.ts => exit 0"]
 DEVIATIONS_FROM_PLAN: [null or "Added extra validation per live-reviewer feedback"]
 ```
 
@@ -155,6 +174,8 @@ STATUS: APPROVE | CHANGES_REQUESTED
 SPEC_COMPLIANCE: PASS | FAIL
 CRITICAL_ISSUES: [count]
 HIGH_ISSUES: [count]
+CLAIMED_ARTIFACTS: []
+EVIDENCE_COMMANDS: ["npm test => exit 0"]
 ```
 
 ### Hunter
@@ -163,6 +184,8 @@ STATUS: CLEAN | ISSUES_FOUND
 # CONTRACT RULE: STATUS=CLEAN requires CRITICAL_ISSUES=0
 CRITICAL_ISSUES: [count]
 HIGH_ISSUES: [count]
+CLAIMED_ARTIFACTS: []
+EVIDENCE_COMMANDS: ["grep -rE ... => exit 0"]
 ```
 
 ### Verifier
@@ -173,6 +196,8 @@ SCENARIOS_TOTAL: [count]
 SCENARIOS_PASSED: [count]
 BLOCKERS: [count]
 SPEC_COMPLIANCE: PASS | FAIL
+CLAIMED_ARTIFACTS: []
+EVIDENCE_COMMANDS: ["npm test => exit 0", "npm run build => exit 0"]
 ```
 
 ### Investigator
@@ -183,6 +208,8 @@ AGENT_ID: "investigator-1"
 ROOT_CAUSE: "[one-line summary]"
 EVIDENCE: "[reproduction command/output summary]"
 VARIANTS_COVERED: [count]
+CLAIMED_ARTIFACTS: []
+EVIDENCE_COMMANDS: ["python repro.py => exit 1"]
 ```
 
 ### Planner
@@ -192,6 +219,8 @@ STATUS: PLAN_CREATED | NEEDS_CLARIFICATION
 PLAN_FILE: "[path]"
 PHASES: [count]
 CONFIDENCE: [0-100]
+CLAIMED_ARTIFACTS: ["docs/plans/YYYY-MM-DD-feature-plan.md"]
+EVIDENCE_COMMANDS: []
 ```
 
 ---
@@ -227,9 +256,14 @@ Rules:
    → If security says CRITICAL but others disagree → security wins
    → AskUserQuestion if genuine conflict
 
-3. Collect contract.MEMORY_NOTES for persistence
+3. Validate artifact/evidence integrity:
+   → If CLAIMED_ARTIFACTS contains unauthorized paths or missing files, create REM-EVIDENCE and STOP
+   → If teammate narrative claims artifacts but CLAIMED_ARTIFACTS is empty/missing, create REM-EVIDENCE and STOP
+   → If role requires command proof and EVIDENCE_COMMANDS is empty/missing, create REM-EVIDENCE and STOP
 
-4. If none triggered → Proceed to next phase
+4. Collect contract.MEMORY_NOTES for persistence
+
+5. If none triggered → Proceed to next phase
 ```
 
 ### Step 3: Output Validation Evidence

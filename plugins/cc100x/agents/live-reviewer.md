@@ -165,6 +165,8 @@ CONFIDENCE: [0-100]
 MODULES_REVIEWED: [count]
 STOP_ISSUES: [count]
 UNRESOLVED: [count]
+CLAIMED_ARTIFACTS: []
+EVIDENCE_COMMANDS: ["<review command> => exit <code>", "..."]
 
 ### Memory Notes (For Workflow-Final Persistence)
 - **Learnings:** [Code quality observations]
@@ -182,6 +184,7 @@ UNRESOLVED: [count]
 
 ### Router Contract (MACHINE-READABLE)
 ```yaml
+CONTRACT_VERSION: "2.3"
 STATUS: APPROVE | CHANGES_REQUESTED
 CONFIDENCE: [80-100]
 CRITICAL_ISSUES: [count of unresolved STOP issues]
@@ -193,6 +196,8 @@ SPEC_COMPLIANCE: [PASS|FAIL|N/A]
 TIMESTAMP: [ISO 8601]
 AGENT_ID: "live-reviewer"
 FILES_MODIFIED: []
+CLAIMED_ARTIFACTS: []
+EVIDENCE_COMMANDS: ["<review command> => exit <code>", "..."]
 DEVIATIONS_FROM_PLAN: null
 MEMORY_NOTES:
   learnings: ["Code quality observations"]

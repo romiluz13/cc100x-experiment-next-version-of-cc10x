@@ -145,6 +145,8 @@ CRITICAL:
 HIGH_COUNT: [N]
 HIGH:
 - [file:line] - [short title] → [recommended fix]
+CLAIMED_ARTIFACTS: []
+EVIDENCE_COMMANDS: ["<hunt command> => exit <code>", "..."]
 
 ### Memory Notes (For Workflow-Final Persistence)
 - **Learnings:** [Error handling insights for activeContext.md]
@@ -162,6 +164,7 @@ HIGH:
 
 ### Router Contract (MACHINE-READABLE)
 ```yaml
+CONTRACT_VERSION: "2.3"
 STATUS: CLEAN | ISSUES_FOUND
 CRITICAL_ISSUES: [count]
 HIGH_ISSUES: [count]
@@ -172,6 +175,8 @@ SPEC_COMPLIANCE: N/A
 TIMESTAMP: [ISO 8601]
 AGENT_ID: "hunter"
 FILES_MODIFIED: []
+CLAIMED_ARTIFACTS: []
+EVIDENCE_COMMANDS: ["<hunt command> => exit <code>", "..."]
 DEVIATIONS_FROM_PLAN: null
 MEMORY_NOTES:
   learnings: ["Error handling insights"]

@@ -164,6 +164,8 @@ CRITICAL:
 HIGH_COUNT: [N]
 HIGH:
 - [file:line] - [issue] → [fix]
+CLAIMED_ARTIFACTS: []
+EVIDENCE_COMMANDS: ["<review command> => exit <code>", "..."]
 
 ### Memory Notes (For Workflow-Final Persistence)
 - **Learnings:** [Performance insights for activeContext.md]
@@ -181,6 +183,7 @@ HIGH:
 
 ### Router Contract (MACHINE-READABLE)
 ```yaml
+CONTRACT_VERSION: "2.3"
 STATUS: APPROVE | CHANGES_REQUESTED
 CONFIDENCE: [80-100]
 CRITICAL_ISSUES: [count]
@@ -192,6 +195,8 @@ SPEC_COMPLIANCE: [PASS|FAIL]
 TIMESTAMP: [ISO 8601]
 AGENT_ID: "performance-reviewer"
 FILES_MODIFIED: []
+CLAIMED_ARTIFACTS: []
+EVIDENCE_COMMANDS: ["<review command> => exit <code>", "..."]
 DEVIATIONS_FROM_PLAN: null
 MEMORY_NOTES:
   learnings: ["Performance insights"]

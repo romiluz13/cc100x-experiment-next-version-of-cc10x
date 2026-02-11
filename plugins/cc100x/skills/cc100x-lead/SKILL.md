@@ -995,13 +995,17 @@ If NOT found → Teammate output is non-compliant. Create REM-EVIDENCE task:
 
 ### Step 1.5: Validate Artifact Claims
 ```
-Scan teammate output for file-creation claims ("created", "saved", "wrote", "exported").
-If a claimed artifact path exists:
+Primary source: contract.CLAIMED_ARTIFACTS (if present).
+Fallback source: teammate narrative claims ("created", "saved", "wrote", "exported").
+
+For each claimed artifact path:
   - ensure path is in approved durable paths or explicitly user-approved
-If claim is unauthorized OR path is missing:
+  - ensure file exists
+
+If claim is unauthorized OR path is missing OR narrative claims mismatch contract.CLAIMED_ARTIFACTS:
   TaskCreate({
     subject: "CC100X REM-EVIDENCE: unauthorized artifact claim",
-    description: "Teammate claimed artifact outside approved paths or missing file evidence.",
+    description: "Teammate artifact claim failed governance check (unauthorized path, missing file, or claim mismatch).",
     activeForm: "Validating artifact claims"
   })
   Block downstream tasks and STOP.
@@ -1012,11 +1016,14 @@ If claim is unauthorized OR path is missing:
 Parse the YAML block inside Router Contract section.
 
 CONTRACT FIELDS:
+- CONTRACT_VERSION: expected schema version (`2.3` current target)
 - STATUS: Teammate's self-reported status (PASS/FAIL/APPROVE/etc)
 - BLOCKING: true/false - whether workflow should stop
 - REQUIRES_REMEDIATION: true/false - whether REM-FIX task needed
 - REMEDIATION_REASON: Exact text for remediation task description
 - CRITICAL_ISSUES: Count of blocking issues (if applicable)
+- CLAIMED_ARTIFACTS: durable artifacts claimed by teammate
+- EVIDENCE_COMMANDS: command-level proof list (`command => exit code`)
 - MEMORY_NOTES: Structured notes for workflow-final persistence
 
 VALIDATION RULES:
@@ -1054,7 +1061,13 @@ If count ≥ 3 → AskUserQuestion:
 
 3. Collect contract.MEMORY_NOTES for workflow-final persistence
 
-4. If none of above triggered → Proceed to next task
+4. Evidence contract check:
+   → If role expects command evidence and contract.EVIDENCE_COMMANDS is empty/missing:
+      create `CC100X REM-EVIDENCE` and STOP.
+   → If evidence commands are present but internally inconsistent (for example, PASS with only failing exits):
+      create `CC100X REM-EVIDENCE` and STOP.
+
+5. If none of above triggered → Proceed to next task
 ```
 
 ### Step 3: Output Validation Evidence

@@ -72,8 +72,10 @@ It is intentionally behavior-first (not synthetic scoring-first).
 ### Router Contract enforcement
 - [ ] Every teammate output ends with `### Router Contract (MACHINE-READABLE)` YAML.
 - [ ] Lead validates contract before marking task complete.
+- [ ] Contract includes `CONTRACT_VERSION`, `CLAIMED_ARTIFACTS`, and `EVIDENCE_COMMANDS` fields.
 - [ ] If contract missing or malformed, lead creates remediation evidence path (non-silent failure).
 - [ ] Unauthorized artifact claims trigger `CC100X REM-EVIDENCE` (no silent proceed).
+- [ ] Narrative artifact claims must match `CLAIMED_ARTIFACTS`; mismatches trigger `CC100X REM-EVIDENCE`.
 
 ### Memory behavior
 - [ ] Teammates read memory at start.

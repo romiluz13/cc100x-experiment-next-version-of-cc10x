@@ -179,6 +179,8 @@ SCENARIOS_PASSED: [X/Y]
 BLOCKERS_COUNT: [N]
 BLOCKERS:
 - [scenario] - [error] → [recommended action]
+CLAIMED_ARTIFACTS: []
+EVIDENCE_COMMANDS: ["<verification command> => exit <code>", "..."]
 
 ### Memory Notes (For Workflow-Final Persistence)
 - **Learnings:** [Integration insights for activeContext.md]
@@ -196,6 +198,7 @@ BLOCKERS:
 
 ### Router Contract (MACHINE-READABLE)
 ```yaml
+CONTRACT_VERSION: "2.3"
 STATUS: PASS | FAIL
 SCENARIOS_TOTAL: [total]
 SCENARIOS_PASSED: [passed]
@@ -207,6 +210,8 @@ SPEC_COMPLIANCE: [PASS|FAIL]
 TIMESTAMP: [ISO 8601]
 AGENT_ID: "verifier"
 FILES_MODIFIED: []
+CLAIMED_ARTIFACTS: []
+EVIDENCE_COMMANDS: ["<verification command> => exit <code>", "..."]
 DEVIATIONS_FROM_PLAN: null
 MEMORY_NOTES:
   learnings: ["Integration insights"]

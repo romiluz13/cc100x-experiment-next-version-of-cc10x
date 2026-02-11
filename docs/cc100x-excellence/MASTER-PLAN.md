@@ -67,7 +67,8 @@ This plan is **compaction-safe** and should be treated as the single source of t
 4. `docs/cc100x-excellence/DECISION-LOG.md`
 5. `archive/2026-02-11-post-launch-docs/docs/cc100x-excellence/BORROW-STRATEGY-NEURAL-HARMONY.md` (historical strategy snapshot)
 6. `docs/cc100x-excellence/PRODUCTION-READINESS-SYSTEM.md`
-5. Runtime hardening across:
+7. `docs/cc100x-excellence/POST-LAUNCH-HARDENING-PLAN-2026-02-11.md`
+8. Runtime hardening across:
    - `plugins/cc100x/skills/cc100x-lead/SKILL.md`
    - `plugins/cc100x/skills/router-contract/SKILL.md`
    - `plugins/cc100x/skills/review-arena/SKILL.md`

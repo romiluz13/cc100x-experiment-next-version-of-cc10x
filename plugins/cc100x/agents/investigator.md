@@ -198,6 +198,8 @@ CONFIDENCE: [0-100]
 ROOT_CAUSE: "[one-line summary]"
 AGENT_ID: "investigator-{N}"
 EVIDENCE: "[reproduction command/output summary]"
+CLAIMED_ARTIFACTS: []
+EVIDENCE_COMMANDS: ["<diagnostic command> => exit <code>", "..."]
 
 ### Memory Notes (For Workflow-Final Persistence)
 - **Learnings:** [Root cause and investigation approach]
@@ -215,6 +217,7 @@ EVIDENCE: "[reproduction command/output summary]"
 
 ### Router Contract (MACHINE-READABLE)
 ```yaml
+CONTRACT_VERSION: "2.3"
 STATUS: EVIDENCE_FOUND | INVESTIGATING | BLOCKED
 CONFIDENCE: [0-100]
 AGENT_ID: "investigator-{N}"
@@ -228,6 +231,8 @@ REMEDIATION_REASON: null
 SPEC_COMPLIANCE: N/A
 TIMESTAMP: [ISO 8601]
 FILES_MODIFIED: []
+CLAIMED_ARTIFACTS: []
+EVIDENCE_COMMANDS: ["<diagnostic command> => exit <code>", "..."]
 DEVIATIONS_FROM_PLAN: null
 MEMORY_NOTES:
   learnings: ["Root cause and investigation approach"]

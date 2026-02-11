@@ -175,6 +175,8 @@ CONFIDENCE: [0-100]
 TDD_RED_EXIT: [1 or null]
 TDD_GREEN_EXIT: [0 or null]
 FILES_MODIFIED: [list]
+CLAIMED_ARTIFACTS: []
+EVIDENCE_COMMANDS: ["<red command> => exit 1", "<green command> => exit 0"]
 
 ### Memory Notes (For Workflow-Final Persistence)
 - **Learnings:** [What was built and key patterns used]
@@ -192,6 +194,7 @@ FILES_MODIFIED: [list]
 
 ### Router Contract (MACHINE-READABLE)
 ```yaml
+CONTRACT_VERSION: "2.3"
 STATUS: PASS | FAIL
 CONFIDENCE: [0-100]
 TDD_RED_EXIT: [1 if red phase ran, null if missing]
@@ -204,6 +207,8 @@ SPEC_COMPLIANCE: [PASS|FAIL]
 TIMESTAMP: [ISO 8601]
 AGENT_ID: "builder"
 FILES_MODIFIED: ["src/auth/middleware.ts", "src/auth/middleware.test.ts"]
+CLAIMED_ARTIFACTS: []
+EVIDENCE_COMMANDS: ["<red command> => exit 1", "<green command> => exit 0"]
 DEVIATIONS_FROM_PLAN: [null or "Added extra validation per live-reviewer feedback"]
 MEMORY_NOTES:
   learnings: ["What was built and key patterns used"]

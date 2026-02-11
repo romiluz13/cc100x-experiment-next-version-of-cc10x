@@ -232,6 +232,8 @@ STATUS: [PLAN_CREATED/NEEDS_CLARIFICATION]
 CONFIDENCE: [0-100]
 PLAN_FILE: "[path]"
 PHASES: [count]
+CLAIMED_ARTIFACTS: ["docs/plans/YYYY-MM-DD-<feature>-plan.md"]
+EVIDENCE_COMMANDS: []
 
 ### Memory Notes (For Workflow-Final Persistence)
 - **Learnings:** [Planning approach and key insights]
@@ -244,6 +246,7 @@ PHASES: [count]
 
 ### Router Contract (MACHINE-READABLE)
 ```yaml
+CONTRACT_VERSION: "2.3"
 STATUS: PLAN_CREATED | NEEDS_CLARIFICATION
 CONFIDENCE: [0-100]
 PLAN_FILE: "[path to saved plan, e.g., docs/plans/2026-02-05-feature-plan.md]"
@@ -257,6 +260,8 @@ SPEC_COMPLIANCE: N/A
 TIMESTAMP: [ISO 8601]
 AGENT_ID: "planner"
 FILES_MODIFIED: ["docs/plans/YYYY-MM-DD-<feature>-plan.md"]
+CLAIMED_ARTIFACTS: ["docs/plans/YYYY-MM-DD-<feature>-plan.md"]
+EVIDENCE_COMMANDS: []
 DEVIATIONS_FROM_PLAN: null
 MEMORY_NOTES:
   learnings: ["Planning approach and key insights"]
