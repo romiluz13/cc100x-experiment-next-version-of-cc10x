@@ -185,6 +185,21 @@ No major orchestration change should be considered final without a decision entr
 - **Evidence:** S3 runtime + runbook + lint + plan updates and successful `npm run check:cc100x`.
 - **Follow-ups:** Execute S4 completeness validation and record final production verdict via production readiness matrix.
 
+## DEC-20260211-003
+- **Status:** APPROVED
+- **Date:** 2026-02-11
+- **Phase:** D
+- **Title:** Execute S4 completeness validation gate (Harmony Report + cross-file consistency lint)
+- **Owner:** @rom.iluz
+- **Scope:** `docs/cc100x-excellence/EXPECTED-BEHAVIOR-RUNBOOK.md`, `scripts/lint-cc100x-protocol-integrity.sh`
+- **Context:** Need objective proof of no conflict/duplication/redundancy before final production verdict.
+- **Decision:** Add a runbook-level Harmony Report completeness gate and enforce consistency checks in lint for gate ordering, state vocabulary, and remediation-route resolvability.
+- **Alternatives Considered:** Keep completeness checks as manual reviewer judgment; rejected due to drift risk and non-repeatable release decisions.
+- **Risk Assessment:** Low
+- **Rollback Plan:** Remove Harmony Report section and revert added lint checks; return to prior protocol-integrity scope.
+- **Evidence:** S4 runbook/lint updates and successful `npm run check:cc100x`.
+- **Follow-ups:** Execute final live validation matrix and record explicit Phase E release verdict.
+
 ## Pending Decisions
 1. DEC-Phase-B profile semantics finalization (`deterministic/adaptive/turbo-quality`).
 2. DEC-Phase-C Router Contract v2 field set and strictness strategy.

@@ -29,9 +29,24 @@ require_pattern_file() {
   fi
 }
 
+forbid_pattern_file() {
+  local pattern="$1"
+  local file="$2"
+  local message="$3"
+  if rg -q "$pattern" "$file"; then
+    fail "$message"
+  fi
+}
+
 line_of() {
   local pattern="$1"
   rg -n "$pattern" "$lead" | head -n1 | cut -d: -f1
+}
+
+line_of_file() {
+  local pattern="$1"
+  local file="$2"
+  rg -n "$pattern" "$file" | head -n1 | cut -d: -f1
 }
 
 [[ -f "$lead" ]] || { echo "FAIL: Missing lead skill file: $lead" >&2; exit 1; }
@@ -92,6 +107,8 @@ require_pattern 'defer `hunter` / triad / `verifier` until runnable' "BUILD must
 require_pattern_file "Depth is selected before task creation" "$runbook" "Runbook must define depth selection before BUILD task creation"
 require_pattern_file "S16 - BUILD quick-path bounded change" "$runbook" "Runbook must include quick-path validation scenario"
 require_pattern_file "S17 - BUILD quick-path forced escalation" "$runbook" "Runbook must include quick-path escalation scenario"
+require_pattern_file "^## 11\\. Harmony Report \\(Completeness Gate\\)" "$runbook" "Runbook must include Harmony Report completeness gate"
+require_pattern_file "Required Pass Criteria" "$runbook" "Runbook must include explicit Harmony pass criteria"
 
 # Required gates presence
 for gate in \
@@ -119,6 +136,29 @@ if [[ -z "$team_created_line" || -z "$tasks_created_line" ]]; then
 elif (( team_created_line >= tasks_created_line )); then
   fail "TEAM_CREATED must appear before TASKS_CREATED in gate sequence"
 fi
+
+# Runbook gate ordering sanity (TEAM_CREATED before TASKS_CREATED)
+rb_team_created_line="$(line_of_file "8\\. .*TEAM_CREATED" "$runbook")"
+rb_tasks_created_line="$(line_of_file "9\\. .*TASKS_CREATED" "$runbook")"
+if [[ -z "$rb_team_created_line" || -z "$rb_tasks_created_line" ]]; then
+  fail "Unable to verify TEAM_CREATED/TASKS_CREATED order in runbook"
+elif (( rb_team_created_line >= rb_tasks_created_line )); then
+  fail "Runbook must keep TEAM_CREATED before TASKS_CREATED"
+fi
+
+# State vocabulary consistency across lead and runbook
+for state in "working" "idle-blocked" "idle-unresponsive" "stalled" "done"; do
+  require_pattern "$state" "Lead missing state label: $state"
+  require_pattern_file "$state" "$runbook" "Runbook missing state label: $state"
+done
+
+# Contradiction guard: reject inverted gate-order phrasing in runbook
+forbid_pattern_file "TASKS_CREATED[^\\n]*before[^\\n]*TEAM_CREATED" "$runbook" "Runbook contains contradictory gate order (TASKS_CREATED before TEAM_CREATED)"
+
+# Remediation-route completeness in runbook
+require_pattern_file "After REM-FIX completion" "$runbook" "Runbook must define remediation re-review entry"
+require_pattern_file "re-review tasks \\(security/performance/quality\\)" "$runbook" "Runbook must require re-review triad after remediation"
+require_pattern_file "Challenge round and re-hunt run before verifier is unblocked" "$runbook" "Runbook must require re-hunt + challenge before verifier re-open"
 
 # Remediation loop must include re-review triad + re-hunt + verifier re-block
 require_pattern "Re-review after remediation" "Remediation loop must create re-review tasks"

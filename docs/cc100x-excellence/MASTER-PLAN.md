@@ -247,10 +247,10 @@ CC100x can be called best-in-class only if:
 ---
 
 ## 12) Next Action List (Immediate)
-1. Execute Phase S4 from `BORROW-STRATEGY-NEURAL-HARMONY.md` (completeness validation gate) after S3 approval.
+1. Execute final live validation matrix using `EXPECTED-BEHAVIOR-RUNBOOK.md` + Harmony Report.
 2. Run `npm run check:cc100x` and verify no protocol regressions.
-3. Update decision log with S4 approval/rejection evidence.
-4. Continue final release validation matrix and record explicit production verdict.
+3. Record explicit Phase E production verdict in decision log (`READY NOW` / `READY WITH DECLARED LIMITS` / `NOT READY`).
+4. If not `READY NOW`, open only targeted remediation tasks (no architecture expansion).
 5. Apply production decision matrix from `PRODUCTION-READINESS-SYSTEM.md` and explicitly mark release status (`READY NOW` / `READY WITH DECLARED LIMITS` / `NOT READY`).
 
 ---

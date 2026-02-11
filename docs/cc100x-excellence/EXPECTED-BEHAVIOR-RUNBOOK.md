@@ -411,3 +411,37 @@ Hard fail conditions present: [Yes/No]
 1. ...
 2. ...
 ```
+
+---
+
+## 11. Harmony Report (Completeness Gate)
+
+Run this after the scenario matrix and before final production decision.
+
+### A. Rule Consistency
+- [ ] No contradictory gate ordering between runtime and runbook.
+- [ ] State vocabulary is consistent (`working`, `idle-blocked`, `idle-unresponsive`, `stalled`, `done`).
+- [ ] Remediation route is fully resolvable (blocking -> `REM-FIX` -> re-review/re-hunt -> verifier).
+
+### B. Authority Clarity
+- [ ] Runtime behavior authority is lead skill.
+- [ ] Validation authority is runbook.
+- [ ] Regression authority is lint.
+- [ ] Governance authority is decision log.
+
+### C. Completeness
+- [ ] No skipped critical gate in live run.
+- [ ] No unauthorized artifact claim passed silently.
+- [ ] No orphan/inconsistent workflow instance left unresolved.
+- [ ] Team lifecycle closed (`shutdown_request` + `TeamDelete`) before final completion.
+
+### Required Pass Criteria
+1. `npm run check:cc100x` passes.
+2. Harmony Report sections A/B/C have no `X`.
+3. No hard-fail condition is present.
+4. Decision log contains explicit release verdict entry.
+
+If any criterion fails:
+1. Mark release as `NOT READY`.
+2. Open targeted remediation tasks.
+3. Re-run Harmony Report after fixes.
