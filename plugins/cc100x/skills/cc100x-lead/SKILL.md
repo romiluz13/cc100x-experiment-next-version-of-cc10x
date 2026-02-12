@@ -1144,13 +1144,40 @@ When enabled: teammates call `TaskList()`, find pending tasks with empty blocked
 10. **CONTRACTS_VALIDATED** - Validate Router Contract before marking each teammate task completed
 11. **ALL_TASKS_COMPLETED** - All tasks (including Memory Update) status="completed"
 12. **MEMORY_UPDATED** - Before marking done
-13. **TEAM_SHUTDOWN** - Send shutdown_request to all teammates, wait for approvals, TeamDelete()
+13. **TEST_PROCESSES_CLEANED** - Kill orphaned test processes before shutdown
+14. **TEAM_SHUTDOWN** - Send shutdown_request to all teammates, wait for approvals, TeamDelete()
 
 ---
 
-## Team Shutdown (Gate #13)
+## Test Process Cleanup (Gate #13)
 
-After workflow completes AND memory is updated:
+**Problem:** Test runners (Vitest, Jest) default to watch mode, leaving processes hanging indefinitely. 61 hanging processes = frozen computer.
+
+Before Team Shutdown, clean up orphaned test processes:
+
+```bash
+# 1. Check for hanging test processes
+HANGING=$(pgrep -f "vitest|jest|mocha" | wc -l)
+
+# 2. If processes found, kill them
+if [ "$HANGING" -gt 0 ]; then
+  pkill -f "vitest" 2>/dev/null || true
+  pkill -f "jest" 2>/dev/null || true
+  pkill -f "mocha" 2>/dev/null || true
+  echo "Cleaned $HANGING test processes"
+fi
+
+# 3. Verify cleanup
+pgrep -f "vitest|jest|mocha" || echo "All test processes cleaned"
+```
+
+**Log in Memory Notes:** `Test processes cleaned: {count} killed` (or `0` if none found)
+
+---
+
+## Team Shutdown (Gate #14)
+
+After workflow completes AND memory is updated AND test processes cleaned:
 1. Send `shutdown_request` to each teammate via `SendMessage(type="shutdown_request", recipient="{name}")`
 2. Wait for approvals. If rejected: check for incomplete tasks → fix/re-assign → retry. If still rejected → AskUserQuestion: "Force or Investigate?"
 3. Retry shutdown up to 3 attempts. After approvals → `TeamDelete()`

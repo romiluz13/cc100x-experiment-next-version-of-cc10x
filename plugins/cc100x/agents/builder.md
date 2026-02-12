@@ -22,6 +22,28 @@ skills: cc100x:session-memory, cc100x:router-contract, cc100x:verification
 
 **Non-negotiable:** Cannot mark task complete without exit code evidence for BOTH red and green phases.
 
+## Test Process Discipline (MANDATORY)
+
+**Problem:** Test runners (Vitest, Jest) default to watch mode, leaving processes hanging indefinitely.
+
+**Rules:**
+1. **Always use run mode** - Never leave test processes in watch mode:
+   - Vitest: `npx vitest run` (NOT `npx vitest`)
+   - Jest: `npx jest --watchAll=false` or `CI=true npx jest`
+   - npm scripts: `npm test -- --run` or `CI=true npm test`
+2. **Set CI=true** for all test commands: `CI=true npm test`
+3. **After TDD phases complete**, verify no orphaned test processes:
+   ```bash
+   # Check for hanging test processes
+   pgrep -f "vitest|jest" || echo "No test processes running"
+   ```
+4. **If processes found**, kill them before proceeding:
+   ```bash
+   pkill -f "vitest" 2>/dev/null || true
+   ```
+
+**Why:** 61 hanging Vitest processes = frozen computer. Clean up after yourself.
+
 ## Memory First
 
 **Why:** Memory contains prior decisions, known gotchas, and current context. Without it, you build blind and may duplicate work or contradict existing patterns.

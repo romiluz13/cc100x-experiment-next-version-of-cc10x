@@ -1,7 +1,6 @@
 ---
 name: test-driven-development
 description: "Internal skill. Use cc100x-lead for all development tasks."
-allowed-tools: Read, Grep, Glob, Bash, Write, Edit
 ---
 
 # Test-Driven Development (TDD)
@@ -13,6 +12,22 @@ Write the test first. Watch it fail. Write minimal code to pass.
 **Core principle:** If you didn't watch the test fail, you don't know if it tests the right thing.
 
 **Violating the letter of the rules is violating the spirit of the rules.**
+
+## Test Process Discipline (CRITICAL)
+
+**Problem:** Test runners (Vitest, Jest) default to watch mode, leaving processes hanging indefinitely. 61 hanging processes = frozen computer.
+
+**Mandatory Rules:**
+1. **Always use run mode** - Never invoke watch mode:
+   - Vitest: `npx vitest run` (NOT `npx vitest`)
+   - Jest: `CI=true npx jest` or `npx jest --watchAll=false`
+   - npm scripts: `CI=true npm test` or `npm test -- --run`
+2. **Prefer CI=true prefix** for all test commands: `CI=true npm test`
+3. **After TDD cycle complete**, verify no orphaned processes:
+   ```bash
+   pgrep -f "vitest|jest" || echo "Clean"
+   ```
+4. **Kill if found**: `pkill -f "vitest" 2>/dev/null || true`
 
 ## When to Use
 
@@ -103,7 +118,9 @@ Vague name, tests mock not code
 **MANDATORY. Never skip.**
 
 ```bash
-npm test path/to/test.test.ts
+# MUST use run mode to prevent hanging processes
+CI=true npm test path/to/test.test.ts
+# Or: npx vitest run path/to/test.test.ts
 ```
 
 Confirm:
@@ -156,7 +173,9 @@ Don't add features, refactor other code, or "improve" beyond the test. Don't har
 **MANDATORY.**
 
 ```bash
-npm test path/to/test.test.ts
+# MUST use run mode to prevent hanging processes
+CI=true npm test path/to/test.test.ts
+# Or: npx vitest run path/to/test.test.ts
 ```
 
 Confirm:
@@ -360,7 +379,7 @@ test('rejects empty email', async () => {
 
 **Verify RED**
 ```bash
-$ npm test
+$ CI=true npm test
 FAIL: expected 'Email required', got undefined
 ```
 
@@ -376,7 +395,7 @@ function submitForm(data: FormData) {
 
 **Verify GREEN**
 ```bash
-$ npm test
+$ CI=true npm test
 PASS
 ```
 
@@ -395,6 +414,7 @@ Before marking work complete:
 - [ ] Output pristine (no errors, warnings)
 - [ ] Tests use real code (mocks only if unavoidable)
 - [ ] Edge cases and errors covered
+- [ ] **No hanging test processes** (`pgrep -f "vitest|jest"` returns empty)
 
 Can't check all boxes? You skipped TDD. Start over.
 

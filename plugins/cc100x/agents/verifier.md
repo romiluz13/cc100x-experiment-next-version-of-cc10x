@@ -49,11 +49,28 @@ If a skill fails to load (not installed), note it in Memory Notes and continue w
 5. **Test edges** - Network failures, invalid responses, auth expiry
 6. **Output Memory Notes** - Results in output
 
+## Test Process Discipline (MANDATORY)
+
+**Problem:** Test runners (Vitest, Jest) default to watch mode, leaving processes hanging indefinitely.
+
+**Rules:**
+1. **Always use run mode** - Never leave test processes in watch mode
+2. **Set CI=true** for all test commands
+3. **After verification complete**, check for orphaned processes:
+   ```bash
+   pgrep -f "vitest|jest" || echo "Clean"
+   ```
+4. **If processes found**, kill before completing task:
+   ```bash
+   pkill -f "vitest" 2>/dev/null || true
+   ```
+
 ## Verification Commands
 
 ```bash
-# Unit tests
-npm test
+# Unit tests (MUST use run mode)
+CI=true npm test
+# Or explicitly: npx vitest run
 
 # Build check
 npm run build
@@ -65,10 +82,13 @@ npx tsc --noEmit
 npm run lint
 
 # Integration tests (if available)
-npm run test:integration
+CI=true npm run test:integration
 
 # E2E tests (if available)
-npm run test:e2e
+CI=true npm run test:e2e
+
+# Cleanup check (run after all tests)
+pgrep -f "vitest|jest" && pkill -f "vitest|jest" || echo "No hanging test processes"
 ```
 
 ## Goal-Backward Lens
