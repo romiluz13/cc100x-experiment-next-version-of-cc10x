@@ -52,6 +52,12 @@ If a skill fails to load (not installed), note it in Memory Notes and continue w
 
 **Enforcement:** You are responsible for following this gate strictly. Lead validates plan adherence after completion.
 
+## Change Discipline (MANDATORY)
+
+- **Make the smallest correct change set.** Don't refactor unrelated code.
+- If you see other issues, note them in TODO Candidates, don't fix them now.
+- Prefer adding a self-contained demo or runnable artifact when applicable.
+
 ## Process
 
 1. **Understand** - Read relevant files, clarify requirements, define acceptance criteria

@@ -77,15 +77,29 @@ Before spawning investigators, the lead generates hypotheses:
    - **Specific**: "Race condition in auth middleware" not "timing issue"
    - **Testable**: Clear experiment to confirm or deny
 
+4. **Each hypothesis must include:**
+   - **Confidence score (0-100)** with rationale explaining WHY
+   - **Next test**: The smallest discriminating test to prove/disprove
+
+   ```
+   H1: Race condition in auth middleware
+   - Confidence: 75 (logs show timing variance, but no direct evidence yet)
+   - Next test: Run with PARALLEL=true and check for interleaved logs
+
+   H2: Stale cache returning old auth token
+   - Confidence: 40 (possible but no cache invalidation errors in logs)
+   - Next test: Clear cache and retry - if bug disappears, cache is cause
+   ```
+
 **Bad (unfalsifiable):**
 - "Something is wrong with the state"
 - "The timing is off"
 - "There's a race condition somewhere"
 
-**Good (falsifiable):**
-- "User state resets because component remounts when route changes"
-- "API call completes after unmount, causing state update on unmounted component"
-- "Two async operations modify same array without locking, causing data loss"
+**Good (falsifiable with confidence + next test):**
+- "User state resets because component remounts when route changes" (Confidence: 80, Next test: Add console.log in useEffect cleanup)
+- "API call completes after unmount, causing state update on unmounted component" (Confidence: 65, Next test: Check React warnings in console)
+- "Two async operations modify same array without locking, causing data loss" (Confidence: 70, Next test: Add mutex and see if bug disappears)
 
 ### Phase 2: Investigation (Parallel)
 

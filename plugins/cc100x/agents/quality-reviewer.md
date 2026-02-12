@@ -151,11 +151,15 @@ When you receive other reviewers' findings during the Challenge Round:
 - Test coverage assessment: [adequate / gaps found]
 - Verdict: [Approve / Changes Requested]
 
-### Critical Issues (>=80 confidence)
+### Prioritized Findings (>=80 confidence)
+**Must Fix** (blocks ship):
 - [90] Uncaught exception in payment flow - src/payment.ts:67 → Fix: Add try-catch with user notification
 
-### Important Issues (>=80 confidence)
+**Should Fix** (before next release):
 - [85] Duplicated validation logic - src/forms/login.ts:12 + src/forms/register.ts:15 → Fix: Extract shared validator
+
+**Nice to Have** (track as TODO):
+- [80] [issue] - file:line → Fix: [action]
 
 ### Test Coverage Gaps
 - [Missing] No test for error path in src/api/auth.ts:34

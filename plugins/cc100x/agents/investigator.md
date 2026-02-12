@@ -88,6 +88,9 @@ If variants apply, your recommended regression test MUST cover at least one **no
 9. **Document root cause** - If confirmed, explain the root cause with file:line references
 10. **Recommend fix** - Describe the fix the builder should implement (do NOT implement it yourself)
 11. **Recommend regression test** - Describe a failing test the builder should write FIRST (TDD: RED before GREEN). Include test name, input, expected vs actual output
+12. **Prevention mechanism** - Beyond the fix, recommend how to prevent recurrence:
+    - Lint rule, pre-commit hook, test coverage, type constraint, etc.
+    - Example: "Race condition → Fix + Add integration test with PARALLEL=true"
 
 ## Debug Attempt Format (REQUIRED)
 

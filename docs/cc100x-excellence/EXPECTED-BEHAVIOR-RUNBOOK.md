@@ -5,6 +5,72 @@ Use it as the source of truth while you run full end-to-end cycles and mark `V` 
 
 It is intentionally behavior-first (not synthetic scoring-first).
 
+**Version:** 0.1.8 | **Last Updated:** 2026-02-12
+
+---
+
+## 0. Retrospective Validation Prompt
+
+**Use this section to validate that all orchestration fixes are working correctly.**
+
+Copy this prompt to Claude to run a comprehensive retrospective:
+
+> **Retrospective Validation Prompt:**
+>
+> "Read `docs/cc100x-excellence/EXPECTED-BEHAVIOR-RUNBOOK.md` Section 0.1 (Orchestration Fixes Checklist).
+> For each of the 11 fixes, verify the fix is correctly implemented in the functional files.
+> Report: ✅ FIXED (with evidence) | ⚠️ PARTIAL (explain gap) | ❌ MISSING (explain issue)
+> Then check Section 0.2 for any NEW issues not covered in the fixes."
+
+### 0.1 Orchestration Fixes Checklist (v0.1.8)
+
+These 11 flaws were identified and fixed. Verify each is working:
+
+| # | Fix | What To Verify | Functional File | Status |
+|---|-----|----------------|-----------------|--------|
+| 1.1 | REM-FIX assignee explicit | REM-FIX task assigns to `builder` by default; self-review exception documented | `cc100x-lead/SKILL.md` ~line 1053 | [ ] |
+| 1.2 | TeamDelete failure recovery | After 3 retries: shutdown requests → retry → user decision (manual cleanup / force continue) | `cc100x-lead/SKILL.md` ~line 1113 | [ ] |
+| 1.3 | Reviewer conflict priority | Security > Performance > Quality; ties require user decision | `cc100x-lead/SKILL.md` ~line 547 | [ ] |
+| 1.4 | Contract-diff checkpoint | Verifies CLAIMED_ARTIFACTS, FILES_MODIFIED, EVIDENCE_COMMANDS before verifier | `cc100x-lead/SKILL.md` ~line 1010 | [ ] |
+| 1.5 | Shutdown rejection handling | 5-step explicit process: parse reason → action per type → max 3 cycles → user decision | `cc100x-lead/SKILL.md` ~line 1098 | [ ] |
+| 2.1 | Challenge round termination | Max 3 rounds; all reviewers responded + no new CRITICAL = complete | `cc100x-lead/SKILL.md` ~line 1020 | [ ] |
+| 2.2 | Debate phase termination | Max 3 rounds; all stated final position + no new evidence = proceed to verdict | `bug-court/SKILL.md` ~line 135 | [ ] |
+| 2.3 | Live-reviewer sync timeout | Escalation ladder reference: MEDIUM at T+5, HIGH at T+8, CRITICAL at T+10 | `pair-build/SKILL.md` ~line 131 | [ ] |
+| 2.4 | Memory Notes preservation | Handoff payload includes `memory_notes_collected` from completed teammates | `cc100x-lead/SKILL.md` ~line 298 | [ ] |
+| 2.5 | Orphan task handling explicit | Do NOT resume; log to Memory Notes; create fresh stamped; delete if blocking | `cc100x-lead/SKILL.md` ~line 277 | [ ] |
+| 2.6 | Bug Court verdict criteria | Clear winner / Tie / All weak / Contested rules defined with user decision format | `bug-court/SKILL.md` ~line 155 | [ ] |
+
+**Verification method:**
+1. Read each functional file at the specified location
+2. Confirm the fix language exists
+3. Confirm behavior is deterministic (not vague)
+4. Mark ✅ / ⚠️ / ❌
+
+### 0.2 Discovery Checklist (Find New Issues)
+
+Use this to discover issues NOT covered in the v0.1.8 fixes:
+
+| Category | Question | Where To Check | Status |
+|----------|----------|----------------|--------|
+| **Handoff gaps** | Is there any handoff point without explicit "who owns next"? | All skill files → search for `TaskCreate`, `SendMessage` | [ ] |
+| **Termination criteria** | Are there any loops/rounds without explicit max or exit condition? | All skill files → search for "round", "loop", "retry" | [ ] |
+| **User decisions** | Are there ambiguous states where lead should ask user but doesn't? | cc100x-lead → search for "if.*equal", "if.*tie", "if.*fails" | [ ] |
+| **Memory loss** | Can any teammate output be lost before Memory Update? | Session handoff payload, Memory Notes collection | [ ] |
+| **Zombie resources** | Can any team/task/teammate persist after workflow completion? | TeamDelete, shutdown flow, orphan sweep | [ ] |
+| **Priority conflicts** | Are all conflict resolution priorities explicit? | Challenge round, debate verdict, remediation priority | [ ] |
+| **Cross-reference integrity** | Do all cross-references to other skills work? | `cc100x:*` references → verify skill exists | [ ] |
+| **Contract validation** | Can any contract field be missing without triggering remediation? | Router Contract validation section | [ ] |
+| **Agent capability leaks** | Can any read-only agent accidentally write? | Agent files → check `mode: READ-ONLY` enforcement | [ ] |
+| **Escalation dead-ends** | Does every escalation ladder have a final user decision? | Escalation sections in cc100x-lead | [ ] |
+
+**New issue template:**
+```
+ISSUE: [Brief description]
+LOCATION: [File:line]
+IMPACT: [What can go wrong]
+PROPOSED FIX: [How to fix]
+```
+
 ---
 
 ## 1. Test Setup (Before Any Scenario)
@@ -465,3 +531,60 @@ If any criterion fails:
 1. Mark release as `NOT READY`.
 2. Open targeted remediation tasks.
 3. Re-run Harmony Report after fixes.
+
+---
+
+## 12. Retrospective Verdict Template
+
+Use this after running the Retrospective Validation (Section 0):
+
+```markdown
+# CC100x Retrospective Validation Verdict
+
+**Version:** 0.1.8
+**Date:** [YYYY-MM-DD]
+**Validated By:** [Name/AI]
+
+## Section 0.1: Orchestration Fixes (11 total)
+
+| # | Fix | Status | Evidence |
+|---|-----|--------|----------|
+| 1.1 | REM-FIX assignee | ✅/⚠️/❌ | [line ref or note] |
+| 1.2 | TeamDelete recovery | ✅/⚠️/❌ | [line ref or note] |
+| 1.3 | Reviewer conflict priority | ✅/⚠️/❌ | [line ref or note] |
+| 1.4 | Contract-diff checkpoint | ✅/⚠️/❌ | [line ref or note] |
+| 1.5 | Shutdown rejection | ✅/⚠️/❌ | [line ref or note] |
+| 2.1 | Challenge termination | ✅/⚠️/❌ | [line ref or note] |
+| 2.2 | Debate termination | ✅/⚠️/❌ | [line ref or note] |
+| 2.3 | Live-reviewer timeout | ✅/⚠️/❌ | [line ref or note] |
+| 2.4 | Memory Notes preservation | ✅/⚠️/❌ | [line ref or note] |
+| 2.5 | Orphan task handling | ✅/⚠️/❌ | [line ref or note] |
+| 2.6 | Bug Court verdict | ✅/⚠️/❌ | [line ref or note] |
+
+**Fixes Verified:** [X/11]
+
+## Section 0.2: New Issues Discovered
+
+| # | Issue | Location | Impact | Severity |
+|---|-------|----------|--------|----------|
+| N.1 | [Description] | [File:line] | [What can go wrong] | HIGH/MED/LOW |
+| N.2 | ... | ... | ... | ... |
+
+**New Issues Found:** [N]
+
+## Verdict
+
+- [ ] All 11 fixes verified ✅
+- [ ] No new HIGH/CRITICAL issues discovered
+- [ ] Cross-references intact
+- [ ] Static checks pass (`npm run check:cc100x`)
+
+**Overall Status:**
+- [ ] ✅ VALIDATED - Ready for production
+- [ ] ⚠️ PARTIAL - Needs targeted fixes (list below)
+- [ ] ❌ FAILED - Major rework required
+
+**Required Actions:**
+1. [Action if any]
+2. [Action if any]
+```

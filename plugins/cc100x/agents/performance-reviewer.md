@@ -146,11 +146,15 @@ When you receive other reviewers' findings during the Challenge Round:
 - Performance issues found: [count by severity]
 - Verdict: [Approve / Changes Requested]
 
-### Critical Issues (>=80 confidence)
+### Prioritized Findings (>=80 confidence)
+**Must Fix** (blocks ship):
 - [90] N+1 query in user feed - src/api/feed.ts:45 → Fix: Use JOIN with eager loading
 
-### Important Issues (>=80 confidence)
+**Should Fix** (before next release):
 - [85] Missing pagination - src/api/posts.ts:23 → Fix: Add cursor-based pagination
+
+**Nice to Have** (track as TODO):
+- [80] [issue] - file:line → Fix: [action]
 
 ### Findings
 - [additional performance observations]

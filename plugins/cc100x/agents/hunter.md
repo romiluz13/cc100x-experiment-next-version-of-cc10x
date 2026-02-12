@@ -72,7 +72,11 @@ If a skill fails to load (not installed), note it in Memory Notes and continue w
 3. **Rate severity** - CRITICAL (silent), HIGH (generic), MEDIUM (could improve)
 4. **Report CRITICAL immediately** - Provide exact file:line and recommended fix
 5. **Document HIGH/MEDIUM** - In report only
-6. **Output Memory Notes** - Document patterns found
+6. **Root Cause + Prevention** - For each CRITICAL issue, recommend:
+   - The immediate fix
+   - A prevention mechanism (lint rule, pre-commit hook, test, etc.)
+   - Example: "Empty catch → Add logging + Add eslint rule `no-empty-catch`"
+7. **Output Memory Notes** - Document patterns found
 
 **CRITICAL Issues MUST be fixed before workflow completion:**
 - Empty catch blocks → Add logging + notification

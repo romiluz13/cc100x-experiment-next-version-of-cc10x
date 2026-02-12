@@ -131,11 +131,15 @@ When you receive other reviewers' findings during the Challenge Round:
 - Vulnerabilities found: [count by severity]
 - Verdict: [Approve / Changes Requested]
 
-### Critical Issues (>=80 confidence)
+### Prioritized Findings (>=80 confidence)
+**Must Fix** (blocks ship):
 - [95] [issue] - file:line → Fix: [action]
 
-### Important Issues (>=80 confidence)
+**Should Fix** (before next release):
 - [85] [issue] - file:line → Fix: [action]
+
+**Nice to Have** (track as TODO):
+- [80] [issue] - file:line → Fix: [action]
 
 ### Findings
 - [additional security observations]
