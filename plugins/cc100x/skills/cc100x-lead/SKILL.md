@@ -446,8 +446,8 @@ This avoids lost/phantom tasks during team initialization.
 
 | Order | Subject | BlockedBy | Key Description Points |
 |-------|---------|-----------|------------------------|
-| 1 | `CC100X PLAN: {feature}` | - | Parent task. Single planner (Plan Approval Mode). |
-| 2 | `CC100X planner: Create plan` | - | Spawn with `mode: "plan"`. Lead approves via plan_approval_response. |
+| 1 | `CC100X PLAN: {feature}` | - | Parent task. Single planner (NO plan mode - planner writes files). |
+| 2 | `CC100X planner: Create plan` | - | Spawn WITHOUT `mode: "plan"`. Planner writes plan file directly. Lead reviews after. |
 | 3 | `CC100X Memory Update: Index plan` | planner | Add plan file to activeContext.md ## References. |
 
 ---
@@ -539,15 +539,13 @@ This avoids lost/phantom tasks during team initialization.
 
 ### PLAN
 1. Load memory
-2. **Spawn planner with Plan Approval Mode:**
-   - Use `mode: "plan"` when spawning the planner teammate
-   - Planner works in read-only mode (explores codebase, designs approach)
-   - When planner calls ExitPlanMode, lead receives plan_approval_request
-   - Lead reviews plan → approves via `plan_approval_response` or rejects with feedback
-   - **Approval criteria:** Plan includes TDD steps, file paths, validation commands, and risk assessment
-   - **Rejection reasons:** Missing test steps, vague file references, no risk assessment
-   - If rejected → planner revises plan, resubmits
-   - If approved → planner exits plan mode, saves plan file + updates memory
+2. **Spawn planner WITHOUT plan mode (CRITICAL):**
+   - **DO NOT use `mode: "plan"`** - this blocks the planner from writing files!
+   - Agent Teams' plan mode is for CODE review, not documentation
+   - Planner writes PLAN FILES (documentation), not code changes
+   - Spawn planner normally → planner writes plan file directly to `docs/plans/`
+   - Lead reviews the saved plan file AFTER planner completes
+   - If changes needed → send message to planner requesting revision
 3. **If external research detected (external tech OR explicit request):**
    - Execute research FIRST using octocode tools directly (NOT as hint)
    - Use: `mcp__octocode__packageSearch`, `mcp__octocode__githubSearchCode`, etc.
@@ -570,15 +568,24 @@ Research is a PREREQUISITE, not a hint. Planner cannot skip it.
 
 4. **Create Agent Team (MANDATORY gate)**:
    - `TeamCreate(...)` with deterministic team name
-   - spawn planner teammate
+   - spawn planner teammate **WITHOUT `mode: "plan"`**
    - verify teammate reachability via direct message
    - enter delegate mode (`Shift+Tab`)
    - run `TaskList()` to confirm team-scoped task context
    - if team gate fails: STOP
 5. **Create task hierarchy in the team-scoped task list** (see Task-Based Orchestration above)
-6. **Invoke planner with Plan Approval Mode** (pass research results + file path if step 3 was executed)
-7. **Review plan** → Approve or reject via plan_approval_response
+6. **Invoke planner** (pass research results + file path if step 3 was executed)
+7. **Review plan file** after planner completes → Request revision via message if needed
 8. Update memory → Reference saved plan, then execute TEAM_SHUTDOWN gate
+
+**PLANNER MODE RULE (CRITICAL):**
+```
+NEVER spawn planner with mode: "plan"
+- Plan mode = read-only = planner CANNOT write plan files = DEADLOCK
+- Planner writes documentation (plan files), not code
+- Agent Teams plan mode is for reviewing CODE changes before they happen
+- Plan files are documentation artifacts, not code changes
+```
 
 ---
 
@@ -1094,6 +1101,7 @@ These constraints come from the Agent Teams architecture. Violating them causes 
 10. **Lead is fixed for team lifetime.** The creator session remains the lead; do not assume leadership transfer to teammates.
 11. **Permission inheritance at spawn.** Teammates start with lead permission mode; per-teammate permission tuning can only happen after spawn.
 12. **Broadcast sparingly.** Prefer targeted `message` over `broadcast`; broadcast token cost scales with team size.
+13. **NEVER spawn planner with `mode: "plan"`.** Plan mode = read-only = planner cannot write plan files = DEADLOCK. Plan mode is for reviewing CODE changes, not documentation. Planner writes plan files directly.
 
 ## Agent Teams Display & Controls
 

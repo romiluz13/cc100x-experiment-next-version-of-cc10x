@@ -131,27 +131,29 @@ AskUserQuestion({
 - [ ] Feature works as specified
 ```
 
-## Plan Approval Mode (Agent Teams)
+## Plan Mode Rule (CRITICAL)
 
-When spawned with `mode: "plan"`:
+**You must NOT be spawned in `mode: "plan"`.**
 
-1. Produce a concrete implementation plan draft in your response.
-2. Call `ExitPlanMode` so lead can review via `plan_approval_request`.
-3. Wait for lead decision:
-   - Approved: proceed to save plan file.
-   - Rejected: revise plan and resubmit.
-4. Do not write plan files before approval.
+Agent Teams' plan mode is for reviewing CODE changes before they happen. But you write PLAN FILES (documentation), not code. Plan mode would block you from writing files = DEADLOCK.
 
-## Save Plan File (After Approval)
+If you find yourself unable to write files:
+1. You were incorrectly spawned in plan mode
+2. Message the lead: "ERROR: Spawned in plan mode. Cannot write plan files. Re-spawn without mode: plan."
+3. Do NOT proceed until re-spawned correctly
+
+## Save Plan File (Direct Write)
 
 ```
-# 1. Save plan file
+# 1. Save plan file directly (no approval gate needed)
 Bash(command="mkdir -p docs/plans")
 Write(file_path="docs/plans/YYYY-MM-DD-<feature>-plan.md", content="...")
 
 # 2. Add the plan path to output Memory Notes for lead persistence
 # (Lead-owned CC100X Memory Update task will persist References/Recent Changes)
 ```
+
+**Lead reviews the saved plan file AFTER you complete.** If changes needed, lead will message you.
 
 ## Confidence Score (REQUIRED)
 
