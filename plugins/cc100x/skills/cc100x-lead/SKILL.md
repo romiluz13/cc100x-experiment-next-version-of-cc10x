@@ -742,6 +742,23 @@ After each teammate completes, validate:
 - Proceeding: [Yes/No + reason]
 ```
 
+### REM-EVIDENCE Timeout Rule (MANDATORY)
+
+REM-EVIDENCE tasks follow the Task Status Lag escalation ladder:
+
+1. **T+2 min**: Nudge teammate: "Provide Router Contract YAML per template."
+2. **T+5 min**: Direct request with deadline: "Router Contract required within 2 minutes or lead will synthesize."
+3. **T+8 min**: **Lead Synthesis Fallback** - If teammate provided narrative output but no YAML:
+   - Extract STATUS, BLOCKING, CRITICAL_ISSUES from narrative
+   - Construct minimal Router Contract with `SYNTHESIZED_BY: lead`
+   - Log: "Router Contract synthesized from narrative - teammate did not provide YAML"
+   - Continue workflow (do NOT hang indefinitely)
+4. **T+10 min**: If no narrative exists to synthesize from:
+   - Mark as CRITICAL/stalled
+   - AskUserQuestion: "Teammate unresponsive. Skip validation / Reassign / Abort?"
+
+**Never hang indefinitely waiting for Router Contract.** The escalation ladder MUST be applied.
+
 ---
 
 ## Remediation Re-Review Loop
