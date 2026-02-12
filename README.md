@@ -2,7 +2,7 @@
 
 ### Next-Gen Orchestration on Agent Teams
 
-**Current version:** 0.1.7
+**Current version:** 0.1.8
 
 **Requires: Agent Teams enabled (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`)**
 
@@ -13,6 +13,27 @@
 <p align="center">
   <em>Agent Teams do the work. You review the results.</em>
 </p>
+
+---
+
+## Quick Install
+
+```bash
+# Step 1: Install plugin
+/plugin marketplace add romiluz13/cc100x-experiment-next-version-of-cc10x
+/plugin install cc100x@romiluz13
+
+# Step 2: Enable Agent Teams in ~/.claude/settings.json
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  }
+}
+
+# Step 3: Restart Claude Code
+```
+
+> **Tip:** Copy this README, paste it into Claude Code, and say: **"Set up cc100x for me"**
 
 ---
 
@@ -419,6 +440,6 @@ MIT License
 ---
 
 <p align="center">
-  <strong>cc100x v0.1.7</strong><br>
+  <strong>cc100x v0.1.8</strong><br>
   <em>Next-Gen Orchestration on Agent Teams</em>
 </p>
